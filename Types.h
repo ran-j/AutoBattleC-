@@ -17,6 +17,14 @@ public:
             ocupied = ocupied;
             Index = index;
         }
+
+        // bool operator== (const GridBox& another_grid) {
+        //     return xIndex == another_grid.xIndex &&yIndex == another_grid.yIndex &&ocupied == another_grid.ocupied &&Index == another_grid.Index;
+        // }
+
+        // bool operator!= (const GridBox& another_grid) {
+        //     return xIndex != another_grid.xIndex &&yIndex != another_grid.yIndex &&ocupied != another_grid.ocupied &&Index != another_grid.Index;
+        // }
     };
 
     enum CharacterClass

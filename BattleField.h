@@ -14,10 +14,14 @@ public:
 	Grid* grid;
 	Types::GridBox* PlayerCurrentLocation;
 	Types::GridBox* EnemyCurrentLocation;
-	list<Character>* AllPlayers;
+
+	list<shared_ptr<Character>> AllPlayers;
+
 	shared_ptr<Character> PlayerCharacter;
+
 	//Character* PlayerCharacter;
-	shared_ptr<Character>* EnemyCharacter;
+	shared_ptr<Character> EnemyCharacter;
+	
 	int currentTurn;
 	int numberOfPossibleTiles;
 

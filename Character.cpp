@@ -6,7 +6,7 @@
 #include <algorithm>
 
 using namespace std;
-Character::Character(Types::CharacterClass charcaterClass)
+Character::Character(Types::CharacterClass charcaterClass): currentBox{-1,-1,true, -1}
 {
 }
 
@@ -25,6 +25,11 @@ bool Character::TakeDamage(float amount)
 	return false;
 }
 
+int Character::getIndex(std::vector<Types::GridBox*> v, int index)
+{
+    return 0;
+}
+
 void Character::Die() 
 {
 	// TODO >> kill
@@ -35,7 +40,6 @@ void Character::WalkTo(bool CanWalk)
 {
 
 }
-
 
 
 void Character::StartTurn(Grid* battlefield) {
@@ -55,8 +59,9 @@ void Character::StartTurn(Grid* battlefield) {
             
             if (currentBox.xIndex > target->currentBox.xIndex)
             {
-                if(find(battlefield->grids.begin(), battlefield->grids.end(), currentBox.Index - 1) != battlefield->grids.end())
-                
+                if (std::find_if(battlefield->grids.begin(), battlefield->grids.end(), [&](const Types::GridBox &box)
+                             { return box.Index == currentBox.Index; }) != battlefield->grids.end())
+
                 {
                     currentBox.ocupied = false;
                     battlefield->grids[currentBox.Index] = currentBox;
@@ -110,10 +115,10 @@ void Character::StartTurn(Grid* battlefield) {
 
 bool Character::CheckCloseTargets(Grid* battlefield)
 {
-
+    return false;
 }
 
-void Character::Attack(Character* target) 
+void Character::Attack(std::shared_ptr<Character> target) 
 {
 
 }

@@ -2,11 +2,11 @@
 #include "Grid.h"
 #include "Character.h"
 #include "Types.h"
+#include <memory>
 
 class Character
 {
 public:
-
     Character(Types::CharacterClass charcaterClass);
     ~Character();
 
@@ -18,7 +18,7 @@ public:
     int PlayerIndex;
     //public Character Target{ get; set; }
 
-    Character* target;
+    std::shared_ptr<Character> target;
 
     bool IsDead;
     char Icon;
@@ -27,7 +27,7 @@ public:
 
     bool TakeDamage(float amount);
 
-    int getIndex(vector<Types::GridBox*> v, int index);
+    int getIndex(std::vector<Types::GridBox*> v, int index);
 
     void Die();
 
@@ -37,7 +37,7 @@ public:
 
     bool CheckCloseTargets(Grid* battlefield);
 
-    void Attack(Character* target);
+    void Attack(std::shared_ptr<Character> target);
 
 
 };

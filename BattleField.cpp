@@ -12,7 +12,7 @@ using namespace std;
 BattleField::BattleField() {
     
     grid = new Grid(5, 5);
-    AllPlayers = new list<Character>();
+    AllPlayers = list<shared_ptr<Character>>();
     int currentTurn = 0;
     int numberOfPossibleTiles = grid->grids.size();
     Setup();
@@ -20,8 +20,6 @@ BattleField::BattleField() {
 
 void BattleField::Setup()
 {
-  
-   
     GetPlayerChoice();
 }
 
@@ -31,25 +29,18 @@ void BattleField::GetPlayerChoice()
     printf("Choose Between One of this Classes:\n");
 
     printf("[1] Paladin, [2] Warrior, [3] Cleric, [4] Archer");
-    //store the player choice in a variable
-    std::string choice;
-
-    std::getline(std::cin, choice);
+    //store the player choice in a variable 
     
-    cin >> choice;
-    switch ((choice))
+    int classIndex = 0;
+    cin >> classIndex; 
+    
+    switch (classIndex)
     {
-    case "1":
-        CreatePlayerCharacter(choice);
-        break;
-    case "2":
-        CreatePlayerCharacter(choice);
-        break;
-    case "3":
-        CreatePlayerCharacter(choice);
-        break;
-    case "4":
-        CreatePlayerCharacter(choice);
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+        CreatePlayerCharacter(classIndex);
         break;
     default:
         GetPlayerChoice();
@@ -60,7 +51,7 @@ void BattleField::GetPlayerChoice()
 void BattleField::CreatePlayerCharacter(int classIndex)
 {
 
-    Types::CharacterClass* characterClass = (Types::CharacterClass*)classIndex;
+    Types::CharacterClass characterClass = (Types::CharacterClass)classIndex;
     printf("Player Class Choice: {characterClass}");
     
     PlayerCharacter = std::make_shared<Character>(characterClass);
@@ -80,8 +71,11 @@ void BattleField::CreateEnemyCharacter()
     int randomInteger = GetRandomInt(1, 4);
     Types::CharacterClass enemyClass = (Types::CharacterClass)randomInteger;
     printf("Enemy Class Choice: {enemyClass}");
-    EnemyCharacter = new Character(enemyClass);
+
+    EnemyCharacter = std::make_shared<Character>(enemyClass); 
+
     EnemyCharacter->Health = 100;
+
     PlayerCharacter->BaseDamage = 20;
     PlayerCharacter->PlayerIndex = 1;
     StartGame();
@@ -93,8 +87,10 @@ void BattleField::StartGame()
     //populates the character variables and targets
     EnemyCharacter->target = PlayerCharacter;
     PlayerCharacter->target = EnemyCharacter;
-    AllPlayers->push_back(PlayerCharacter);
-    AllPlayers->push_back(EnemyCharacter);
+
+    AllPlayers.push_back(PlayerCharacter);
+    AllPlayers.push_back(EnemyCharacter);
+
     AlocatePlayers();
     StartTurn();
 
@@ -106,10 +102,9 @@ void BattleField::StartTurn() {
     {
         //AllPlayers.Sort();  
     }
-    std::list<Character>::iterator it;
-
-    for (it = AllPlayers->begin(); it != AllPlayers->end(); ++it) {
-        it->StartTurn(grid);
+   
+    for (auto it = AllPlayers.begin(); it != AllPlayers.end(); ++it) {
+        (*it)->StartTurn(grid);
     }
 
     currentTurn++;
@@ -146,7 +141,7 @@ void BattleField::HandleTurn()
 
 int BattleField::GetRandomInt(int min, int max)
 {
-    
+    //TODO fix this?
     int index = GetRandomInt(min, max);
     return index;
 }
@@ -159,14 +154,13 @@ void BattleField::AlocatePlayers()
 
 void BattleField::AlocatePlayerCharacter()
 {
-    int random = 0;
+    int random = 0; //TODO random number from 0 to grid max
     auto l_front = grid->grids.begin();
-    advance(l_front, random);
-    Types::GridBox* RandomLocation = &*l_front;
 
-    if (!RandomLocation->ocupied)
+    advance(l_front, random);
+
+    if (!l_front->ocupied)
     {
-        //Types::GridBox* PlayerCurrentLocation = RandomLocation;
         PlayerCurrentLocation = &*l_front;
         l_front->ocupied = true;
         PlayerCharacter->currentBox = *l_front;
@@ -181,9 +175,11 @@ void BattleField::AlocatePlayerCharacter()
 void BattleField::AlocateEnemyCharacter()
 {
     
-    int random = 24;
+    int random = 24; //TODO random number from 0 to grid max
     auto l_front = grid->grids.begin();
+
     advance(l_front, random);
+
     Types::GridBox* RandomLocation = &*l_front;
     
     if (!RandomLocation->ocupied)
