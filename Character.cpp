@@ -6,7 +6,7 @@
 #include <algorithm>
 
 using namespace std;
-Character::Character(Types::CharacterClass charcaterClass): currentBox{-1,-1,true, -1}
+Character::Character(Types::CharacterClass charcaterClass): currentBox{-1,-1,false, -1}
 {
 }
 
@@ -55,7 +55,7 @@ void Character::StartTurn(Grid* battlefield) {
         }
         else
         {   // if there is no target close enough, calculates in wich direction this character should move to be closer to a possible target
-            
+            //TODO draw only once
             
             if (currentBox.xIndex > target->currentBox.xIndex)
             {
@@ -115,11 +115,12 @@ void Character::StartTurn(Grid* battlefield) {
 
 bool Character::CheckCloseTargets(Grid* battlefield)
 {
+    //TODO handle this
     return false;
 }
 
 void Character::Attack(std::shared_ptr<Character> target) 
 {
-
+    //TODO handle this
 }
 

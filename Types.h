@@ -3,6 +3,7 @@ class Types
 {
 public:
 
+    //TODO better names for this Struct
     struct GridBox
     {
         int xIndex;
@@ -10,21 +11,13 @@ public:
         bool ocupied;
         int Index;
 
-        GridBox(int x, int y, bool ocupied, int index)
+        GridBox(int x, int y, bool bOccupied, int index)
         {
             xIndex = x;
             yIndex = y;
-            ocupied = ocupied;
+            ocupied = bOccupied;
             Index = index;
         }
-
-        // bool operator== (const GridBox& another_grid) {
-        //     return xIndex == another_grid.xIndex &&yIndex == another_grid.yIndex &&ocupied == another_grid.ocupied &&Index == another_grid.Index;
-        // }
-
-        // bool operator!= (const GridBox& another_grid) {
-        //     return xIndex != another_grid.xIndex &&yIndex != another_grid.yIndex &&ocupied != another_grid.ocupied &&Index != another_grid.Index;
-        // }
     };
 
     enum CharacterClass

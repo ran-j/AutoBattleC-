@@ -25,6 +25,7 @@ Grid::~Grid()
 
 }
 
+//TODO remove this parameters
 void Grid::drawBattlefield(int Lines, int Columns)
 {
     for (int i = 0; i < Lines; i++)

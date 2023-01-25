@@ -1,11 +1,14 @@
+#include "BattleField.h"
+
 #include "Grid.h"
 #include "BattleField.h"
 #include "Types.h"
 #include "Character.h"
+
 #include <iostream>
-#include "BattleField.h"
 #include <list>
 #include <string>
+#include <cstdlib>
 
 using namespace std;
 
@@ -20,7 +23,7 @@ BattleField::BattleField() {
 
 void BattleField::Setup()
 {
-    GetPlayerChoice();
+    GetPlayerChoice(); 
 }
 
 void BattleField::GetPlayerChoice()
@@ -71,6 +74,7 @@ void BattleField::CreateEnemyCharacter()
     int randomInteger = GetRandomInt(1, 4);
     Types::CharacterClass enemyClass = (Types::CharacterClass)randomInteger;
     printf("Enemy Class Choice: {enemyClass}");
+    printf("\n");
 
     EnemyCharacter = std::make_shared<Character>(enemyClass); 
 
@@ -133,17 +137,25 @@ void BattleField::HandleTurn()
         printf("Click on any key to start the next turn...\n");
         printf("\n");
 
-        //TODO
-        //ConsoleKeyInfo key = Console.ReadKey();
+        //TODO only clear if has any change in field
+        #ifdef __linux__ 
+            system("read");
+            system("clear");
+        #elif _WIN32
+            system("pause");
+            system("cls");
+        #endif       
+
+        printf("\n");
+
         StartTurn();
     }
 }
 
 int BattleField::GetRandomInt(int min, int max)
 {
-    //TODO fix this?
-    int index = GetRandomInt(min, max);
-    return index;
+    int range = max - min + 1;
+    return rand() % range + min;
 }
 
 void BattleField::AlocatePlayers()
@@ -154,7 +166,7 @@ void BattleField::AlocatePlayers()
 
 void BattleField::AlocatePlayerCharacter()
 {
-    int random = 0; //TODO random number from 0 to grid max
+    int random = GetRandomInt(0, grid->grids.size());
     auto l_front = grid->grids.begin();
 
     advance(l_front, random);
@@ -175,7 +187,7 @@ void BattleField::AlocatePlayerCharacter()
 void BattleField::AlocateEnemyCharacter()
 {
     
-    int random = 24; //TODO random number from 0 to grid max
+    int random = GetRandomInt(0, grid->grids.size());
     auto l_front = grid->grids.begin();
 
     advance(l_front, random);
