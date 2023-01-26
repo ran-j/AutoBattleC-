@@ -2,13 +2,13 @@
 - [x] Ask the battlefield size.
 - [x] The enemy character must be randomly chosen.
 - [x] Both characters must be randomly assigned a tile in the battlefield.
-- [ ] Take turns to try to kill their opponent.
+- [x] Take turns to try to kill their opponent.
     - [x] Each character should only perform one action per turn
-    - [ ] If they are within range of a target, they must attack. Otherwise, they will move toward the nearest target
+    - [x] If they are within range of a target, they must attack. Otherwise, they will move toward the nearest target
     - [ ] Add some extra actions that can be done in a turn.
 - [x] Game should work with a battlefield of any size, including a non-square matrix (6x6 or 6x10, for example)
 - [ ] The game should inform the player when the battle ends
-- [ ] The game should inform who was victorious
+- [x] The game should inform who was victorious
 - [x] The battlefield should only be reprinted/redrawn if there have been any visual changes to it
 - [x] Only one character is allowed per tile
 

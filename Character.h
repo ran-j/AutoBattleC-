@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Actor.h"
-#include "Grid.h"
+#include "Actor.h" 
 #include "Types.h"
 
 #include <memory>
@@ -21,8 +20,8 @@ public:
 
     void Die();
 
-    void Attack(std::shared_ptr<Character> target);
-
+    float Attack(Character* target);
+    Types::ActionType GetActionWhenNearEnemy();
     inline bool IsDead() { return bIsDead; }
 
 private:

@@ -1,6 +1,7 @@
 #include "Engine.h"
-
 #include "Actor.h"
+
+#include <stdarg.h>
 
 Engine::Engine()
 {
@@ -26,6 +27,10 @@ void Engine::ClearCanvas()
 
 void Engine::Draw()
 {
+    if (bShouldQuit)
+    {
+        return;
+    }
     if (!bHasChanges)
     {
         return;
@@ -186,31 +191,24 @@ bool Engine::IsCloseToTarget(Actor *actor, Actor *target)
 {
     auto actorCurrentGrid = GetActorGrid(actor);
     auto targetCurrentGrid = GetActorGrid(target);
+   
+    double dist = DistanceTo(actorCurrentGrid->xIndex, actorCurrentGrid->yIndex, targetCurrentGrid->xIndex, targetCurrentGrid->yIndex);
+    double oneTileDistance = 1;
+     
+    return dist <= oneTileDistance;
+}
 
-    if (actorCurrentGrid->xIndex == targetCurrentGrid->xIndex && actorCurrentGrid->yIndex == targetCurrentGrid->yIndex)
-    {
-        return true;
-    }
-    else if (actorCurrentGrid->xIndex == targetCurrentGrid->xIndex && actorCurrentGrid->yIndex == targetCurrentGrid->yIndex + 1)
-    {
-        return true;
-    }
-    else if (actorCurrentGrid->xIndex == targetCurrentGrid->xIndex && actorCurrentGrid->yIndex == targetCurrentGrid->yIndex - 1)
-    {
-        return true;
-    }
-    else if (actorCurrentGrid->xIndex == targetCurrentGrid->xIndex + 1 && actorCurrentGrid->yIndex == targetCurrentGrid->yIndex)
-    {
-        return true;
-    }
-    else if (actorCurrentGrid->xIndex == targetCurrentGrid->xIndex - 1 && actorCurrentGrid->yIndex == targetCurrentGrid->yIndex)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+void Engine::DrawText(const char* format, ...) 
+{
+    va_list args;
+    va_start(args, format);
+    vfprintf(stdout, format, args);
+    printf("\n");
+    va_end(args);
+
+    //wait input to proceed
+    WaitInput();
+    bHasChanges = true;
 }
 
 // TODO move this to utils
@@ -218,4 +216,11 @@ int Engine::GetRandomInt(int min, int max)
 {
     int range = max - min + 1;
     return rand() % range + min;
+}
+
+// TODO move this to utils
+double Engine::DistanceTo(double x1, double y1, double x2, double y2)
+{
+     //https://www.wikihow.com/Find-the-Distance-Between-Two-Points
+    return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }

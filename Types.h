@@ -28,5 +28,12 @@ public:
         Archer = 4
     };
 
+    enum ActionType
+    {
+        Heal = 1,
+        Attack = 2,
+        UseSkill = 3,
+    };
+
 };
 

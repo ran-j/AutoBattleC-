@@ -1,10 +1,5 @@
-#include "Grid.h"
 #include "Character.h"
-#include "Types.h"
-#include "Character.h"
-#include <vector>
-#include <algorithm>
-
+ 
 using namespace std;
 Character::Character(Types::CharacterClass charcaterClass)
 {
@@ -28,12 +23,19 @@ bool Character::TakeDamage(float amount)
 
 void Character::Die() 
 {
-	// TODO >> kill
-	//TODO >> end the game?
+	printf("aaaaaaaaa, I got killed \n");
 }
 
-void Character::Attack(std::shared_ptr<Character> target) 
+float Character::Attack(Character* target) 
 {
-    //TODO handle this
+	//TODO add miss chance
+    float damage = BaseDamage * DamageMultiplier;
+	target->TakeDamage(damage);
+	return damage;
 }
 
+Types::ActionType Character::GetActionWhenNearEnemy()
+{
+	//TODO
+	return Types::ActionType::Attack;
+}

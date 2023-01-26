@@ -24,8 +24,9 @@ private:
 
 	Character* CreateCharacter(int classIndex, float health, float baseDamage, const char* id, const char* sprite);
 
-
 	int GetRandomInt(int min, int max);
+	float GetRandomFloat(float min, float max);
+	void HandleCombat(Character* attacker, Character* target);
 	
 private:
 	Engine* engine;

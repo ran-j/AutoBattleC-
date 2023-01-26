@@ -56,10 +56,10 @@ void BattleField::SetUpGame()
     case 2:
     case 3:
     case 4:
-        PlayerCharacter = CreateCharacter(classIndex, 100, 20, "player", "P");
+        PlayerCharacter = CreateCharacter(classIndex, 100, 200, "Hero", "P");
         engine->SpawnActor(PlayerCharacter);
 
-        EnemyCharacter = CreateCharacter(GetRandomInt(1, 4), 100, 20, "enemy1", "E");
+        EnemyCharacter = CreateCharacter(GetRandomInt(1, 4), 100, 20, "Evil Man 1", "E");
         engine->SpawnActor(EnemyCharacter);
 
         CharacterAndTargets[PlayerCharacter] = EnemyCharacter;
@@ -68,16 +68,16 @@ void BattleField::SetUpGame()
         TurnQueue.push_back(PlayerCharacter);
         TurnQueue.push_back(EnemyCharacter);
 
-        //shuffle list to prevent player or enemy always init first
-        //std::shuffle(TurnQueue.begin(), TurnQueue.end(), std::mt19937{ std::random_device{}() }); //wtf this gives me a error
+        // shuffle list to prevent player or enemy always init first
+        // std::shuffle(TurnQueue.begin(), TurnQueue.end(), std::mt19937{ std::random_device{}() }); //wtf this gives me a error
 
-        //HAHAHAHAHHAHA SHOULD I ????
-        // std::sort(TurnQueue.begin(), TurnQueue.end(), [](const Character* a, const Character* b) {
-        //     int aLength = std::strlen(a->Id);
-        //     int bLength = std::strlen(b->Id);
-        //     return aLength < bLength;
-        // });
- 
+        // HAHAHAHAHHAHA SHOULD I ????
+        //  std::sort(TurnQueue.begin(), TurnQueue.end(), [](const Character* a, const Character* b) {
+        //      int aLength = std::strlen(a->Id);
+        //      int bLength = std::strlen(b->Id);
+        //      return aLength < bLength;
+        //  });
+
         break;
     default:
         SetUpGame();
@@ -85,12 +85,13 @@ void BattleField::SetUpGame()
     }
 }
 
-Character *BattleField::CreateCharacter(int classIndex, float health, float baseDamage, const char* id, const char* sprite)
+Character *BattleField::CreateCharacter(int classIndex, float health, float baseDamage, const char *id, const char *sprite)
 {
     Types::CharacterClass characterClass = (Types::CharacterClass)classIndex;
     auto PlayerCharacter = new Character(characterClass);
     PlayerCharacter->Health = health;
     PlayerCharacter->BaseDamage = baseDamage;
+    PlayerCharacter->DamageMultiplier = GetRandomFloat(0.2, 1.0); // TODO class influence in life and damage
     PlayerCharacter->Id = id;
     PlayerCharacter->Sprite = sprite;
     return PlayerCharacter;
@@ -98,39 +99,80 @@ Character *BattleField::CreateCharacter(int classIndex, float health, float base
 
 void BattleField::StartTurn()
 {
-
-    for (auto it = TurnQueue.begin(); it != TurnQueue.end(); ++it) {
+    printf("\nLogs: \n");
+    for (auto it = TurnQueue.begin(); it != TurnQueue.end(); ++it)
+    {
         auto currentCharacter = (*it);
         auto enemyTarget = CharacterAndTargets[currentCharacter];
+
+        if (currentCharacter->IsDead())
+        {
+            return;
+        }
         
-        //TODO decide if should move or attack or heal it self. if attacks decide if should use a special skill
-        engine->MoveActorToTarget(currentCharacter, enemyTarget);
+        // TODO decide if should move or attack or heal it self. if attacks decide if should use a special skill
+        if (engine->IsCloseToTarget(currentCharacter, enemyTarget))
+        {
+            Types::ActionType action = currentCharacter->GetActionWhenNearEnemy();
+            switch (action)
+            {
+            case Types::ActionType::Attack:
+                HandleCombat(currentCharacter, enemyTarget);
+                break;
+            default:
+                engine->DrawText("%s is to confused to act", currentCharacter->Id);
+                break;
+            }
+        }
+        else
+        {
+            engine->MoveActorToTarget(currentCharacter, enemyTarget);
+            engine->DrawText("%s move one tile", currentCharacter->Id);
+        }
     }
 
     currentTurn++;
     HandleTurn();
 }
 
+void BattleField::HandleCombat(Character *attacker, Character *target)
+{
+    engine->DrawText("%s launch a attack in %s", attacker->Id, target->Id);
+    // attack target
+    float damage = attacker->Attack(target);
+    // check if miss attack
+    if (damage == 0)
+    {
+        engine->DrawText("%s miss the attack.", attacker->Id, target->Id);
+    }
+    else
+    {
+        // log result
+        engine->DrawText("%s inflate %f in %s with bare hands", attacker->Id, damage, target->Id); // TODO each class have a different attack
+    }
+}
+
 void BattleField::HandleTurn()
 {
     if (PlayerCharacter->IsDead())
     {
-        printf("YOU DIED");
+        engine->ClearCanvas();
+        engine->Stop();
+        printf("\nYOU DIED\n");
+        engine->WaitInput();
     }
     else if (EnemyCharacter->IsDead())
     {
-        printf("Enemy slayed");
+        printf("\nEnemy slayed\n");
+        engine->WaitInput();
     }
-    else{
+    else
+    {
         printf("\n");
-        printf("Click on any key to start the next turn...\n");
+        printf("#### End of turn, click on any key to start the next turn... #### \n");
         printf("\n");
 
-        #ifdef __linux__ 
-            system("read"); 
-        #elif _WIN32
-            system("pause");
-        #endif       
+        engine->WaitInput();
     }
 }
 
@@ -139,4 +181,10 @@ int BattleField::GetRandomInt(int min, int max)
 {
     int range = max - min + 1;
     return rand() % range + min;
+}
+
+// TODO move this to utils
+float BattleField::GetRandomFloat(float min, float max)
+{
+    return max + (rand() / (RAND_MAX / (min - max)));
 }
