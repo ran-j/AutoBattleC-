@@ -3,6 +3,7 @@
 #include <list>
 #include <iostream>
 #include <map>
+#include <list>
 
 using namespace std;
 
@@ -33,8 +34,8 @@ private:
 	Character* EnemyCharacter; //TODO unique pointer
 
 	std::map<Character *, Character*> CharacterAndTargets;
+	list<Character *> TurnQueue;
 
-	bool bPlayerActFirst;
 	int currentTurn = 0;
 };
 

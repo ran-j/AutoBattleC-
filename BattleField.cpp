@@ -8,6 +8,8 @@
 #include <list>
 #include <string>
 #include <cstdlib>
+#include <random>
+#include <algorithm>
 
 using namespace std;
 
@@ -46,8 +48,6 @@ void BattleField::SetUpGame()
     case 2:
     case 3:
     case 4:
-        bPlayerActFirst = GetRandomInt(0, 1);
-
         PlayerCharacter = CreateCharacter(classIndex, 100, 20, "player", "P");
         engine->InsertActor(PlayerCharacter);
 
@@ -57,6 +57,19 @@ void BattleField::SetUpGame()
         CharacterAndTargets[PlayerCharacter] = EnemyCharacter;
         CharacterAndTargets[EnemyCharacter] = PlayerCharacter;
 
+        TurnQueue.push_back(PlayerCharacter);
+        TurnQueue.push_back(EnemyCharacter);
+
+        //shuffle list to prevent player or enemy always init first
+        //std::shuffle(TurnQueue.begin(), TurnQueue.end(), std::mt19937{ std::random_device{}() }); //wtf this gives me a error
+
+        //HAHAHAHAHHAHA SHOULD I ????
+        // std::sort(TurnQueue.begin(), TurnQueue.end(), [](const Character* a, const Character* b) {
+        //     int aLength = std::strlen(a->Id);
+        //     int bLength = std::strlen(b->Id);
+        //     return aLength < bLength;
+        // });
+ 
         break;
     default:
         SetUpGame();
@@ -77,21 +90,13 @@ Character *BattleField::CreateCharacter(int classIndex, float health, float base
 
 void BattleField::StartTurn()
 {
-    auto playerTarget = CharacterAndTargets[PlayerCharacter];
-    auto enemyTarget = CharacterAndTargets[EnemyCharacter];
 
-    //TODO decide if should move or attack or heal it self. if attacks decide if should use a special skill
-
-    //TODO hahahaha this can be far far better
-    if (bPlayerActFirst)
-    {
-        engine->MoveActorToTarget(PlayerCharacter, playerTarget);
-        engine->MoveActorToTarget(EnemyCharacter, enemyTarget);
-    }
-    else 
-    {
-        engine->MoveActorToTarget(EnemyCharacter, enemyTarget);
-        engine->MoveActorToTarget(PlayerCharacter, playerTarget);
+    for (auto it = TurnQueue.begin(); it != TurnQueue.end(); ++it) {
+        auto currentCharacter = (*it);
+        auto enemyTarget = CharacterAndTargets[currentCharacter];
+        
+        //TODO decide if should move or attack or heal it self. if attacks decide if should use a special skill
+        engine->MoveActorToTarget(currentCharacter, enemyTarget);
     }
 
     currentTurn++;

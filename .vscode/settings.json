@@ -46,11 +46,12 @@
         "xstring": "cpp",
         "xtr1common": "cpp",
         "xutility": "cpp",
-        "set": "cpp",
-        "xtree": "cpp",
-        "map": "cpp",
         "functional": "cpp",
+        "map": "cpp",
+        "set": "cpp",
         "unordered_map": "cpp",
-        "xhash": "cpp"
+        "xhash": "cpp",
+        "xtree": "cpp",
+        "random": "cpp"
     }
 }
