@@ -20,12 +20,12 @@ public:
 
     void Die();
 
-    float Attack(Character* target);
+    float Attack(std::shared_ptr<Character> target);
     Types::ActionType GetActionWhenNearEnemy();
     inline bool IsDead() { return bIsDead; }
 
 private:
-    bool bIsDead;
+    bool bIsDead = false;
 
 };
 

@@ -47,7 +47,7 @@ void Engine::Draw()
 
             if (currentGrid->ocupied)
             {
-                Actor *target = Actors[index];
+                std::shared_ptr<Actor> target = Actors[index];
                 if (target)
                 {
                     printf("[%s]\t", target->GetSprite());
@@ -69,7 +69,7 @@ void Engine::Draw()
     bHasChanges = false;
 }
 
-void Engine::SpawnActor(Actor *target)
+void Engine::SpawnActor(std::shared_ptr<Actor> target)
 {
     _ASSERT(grid);
 
@@ -91,12 +91,12 @@ void Engine::SpawnActor(Actor *target)
     }
 }
 
-int Engine::GetActorLocation(Actor *target)
+int Engine::GetActorLocation(std::shared_ptr<Actor> target)
 {
     return ActorsWorldPositions[target->Id];
 }
 
-std::vector<Types::GridBox>::iterator Engine::GetActorGrid(Actor *target)
+std::vector<Types::GridBox>::iterator Engine::GetActorGrid(std::shared_ptr<Actor> target)
 {
     int targetCurrentIndex = GetActorLocation(target);
     auto targetCurrentGrid = grid->grids.begin();
@@ -105,7 +105,7 @@ std::vector<Types::GridBox>::iterator Engine::GetActorGrid(Actor *target)
 }
 
 // TODO this can be better
-void Engine::MoveActorToTarget(Actor *actor, Actor *target)
+void Engine::MoveActorToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<Actor> target)
 {
     int gridSize = GetWorldSize();
     auto actorCurrentGrid = GetActorGrid(actor);
@@ -181,13 +181,13 @@ void Engine::MoveActorToTarget(Actor *actor, Actor *target)
     }
 }
 
-void Engine::SetActorIndex(Actor *target, int index)
+void Engine::SetActorIndex(std::shared_ptr<Actor> target, int index)
 {
     Actors[index] = target;
     ActorsWorldPositions[target->Id] = index;
 }
 
-bool Engine::IsCloseToTarget(Actor *actor, Actor *target)
+bool Engine::IsCloseToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<Actor>target)
 {
     auto actorCurrentGrid = GetActorGrid(actor);
     auto targetCurrentGrid = GetActorGrid(target);
@@ -221,6 +221,6 @@ int Engine::GetRandomInt(int min, int max)
 // TODO move this to utils
 double Engine::DistanceTo(double x1, double y1, double x2, double y2)
 {
-     //https://www.wikihow.com/Find-the-Distance-Between-Two-Points
+    //https://www.wikihow.com/Find-the-Distance-Between-Two-Points
     return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }

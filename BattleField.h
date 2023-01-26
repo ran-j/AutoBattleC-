@@ -22,20 +22,20 @@ private:
 	void StartTurn();
 	void HandleTurn();
 
-	Character* CreateCharacter(int classIndex, float health, float baseDamage, const char* id, const char* sprite);
+	std::shared_ptr<Character> CreateCharacter(int classIndex, float health, float baseDamage, const char* id, const char* sprite);
 
 	int GetRandomInt(int min, int max);
 	float GetRandomFloat(float min, float max);
-	void HandleCombat(Character* attacker, Character* target);
+	void HandleCombat(std::shared_ptr<Character> attacker, std::shared_ptr<Character> target);
 	
 private:
 	Engine* engine;
 
-	Character* PlayerCharacter; //TODO unique pointer
-	Character* EnemyCharacter; //TODO unique pointer
+	std::shared_ptr<Character> PlayerCharacter; //TODO unique pointer
+	std::shared_ptr<Character> EnemyCharacter; //TODO unique pointer
 
-	std::map<Character *, Character*> CharacterAndTargets;
-	list<Character *> TurnQueue;
+	std::map<std::shared_ptr<Character>, std::shared_ptr<Character>> CharacterAndTargets;
+	list<std::shared_ptr<Character>> TurnQueue;
 
 	int currentTurn = 0;
 };

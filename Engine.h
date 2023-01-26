@@ -5,6 +5,7 @@
 
 #include <map>
 #include <vector>
+#include <iostream>
 
 // limitation the render queue is sync if you try to run async you will lose data
 
@@ -21,19 +22,19 @@ public:
     // Will draw the grid with actors in place
     void Draw();
     // Add actor to render queue
-    void SpawnActor(Actor *target);
+    void SpawnActor(std::shared_ptr<Actor> target);
     // Tells if should continue in game loop
     inline bool ShouldQuit() { return bShouldQuit; }
     // Return the world tiles size
     inline int GetWorldSize() { return static_cast<int>(grid->grids.size()); }
     // Return Actor index in world tiles
-    int GetActorLocation(Actor *target);
+    int GetActorLocation(std::shared_ptr<Actor> target);
     // Move Actor to a target location
-    void MoveActorToTarget(Actor *actor, Actor *target);
+    void MoveActorToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<Actor> target);
     // Check if a actor is close to another target
-    bool IsCloseToTarget(Actor *actor, Actor *target);
+    bool IsCloseToTarget(std::shared_ptr<Actor>actor, std::shared_ptr<Actor> target);
     // Returns actor current grid
-    std::vector<Types::GridBox>::iterator GetActorGrid(Actor *target);
+    std::vector<Types::GridBox>::iterator GetActorGrid(std::shared_ptr<Actor> target);
     // Clear user viewport
     void ClearCanvas();
     // Draw user text on viewport
@@ -55,13 +56,14 @@ public:
 
 private:
     // Set Actor Index
-    void SetActorIndex(Actor *target, int index);
+    void SetActorIndex(std::shared_ptr<Actor> target, int index);
 
 private:
     // list to actor to be draw
-    std::map<int, Actor *> Actors;                    // should I use unordered_map?
+    std::map<int, std::shared_ptr<Actor>> Actors;      // should I use unordered_map?
+    //Track of actors position in world
     std::map<const char *, int> ActorsWorldPositions; // should I use unordered_map?
-    // world
+    // world grid
     Grid *grid;
 
     bool bShouldQuit = false;

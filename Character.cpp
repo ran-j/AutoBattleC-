@@ -12,7 +12,7 @@ Character::~Character()
 
 bool Character::TakeDamage(float amount) 
 {
-	if ((Health -= BaseDamage) <= 0) 
+	if ((Health -= amount) <= 0)
 	{
 		bIsDead = true;
 		Die();
@@ -26,7 +26,7 @@ void Character::Die()
 	printf("aaaaaaaaa, I got killed \n");
 }
 
-float Character::Attack(Character* target) 
+float Character::Attack(std::shared_ptr<Character> target) 
 {
 	//TODO add miss chance
     float damage = BaseDamage * DamageMultiplier;

@@ -16,6 +16,7 @@ using namespace std;
 BattleField::BattleField()
 {
     engine = new (Engine);
+    TurnQueue = list<shared_ptr<Character>>();
 }
 
 void BattleField::Init()
@@ -72,7 +73,7 @@ void BattleField::SetUpGame()
         // std::shuffle(TurnQueue.begin(), TurnQueue.end(), std::mt19937{ std::random_device{}() }); //wtf this gives me a error
 
         // HAHAHAHAHHAHA SHOULD I ????
-        //  std::sort(TurnQueue.begin(), TurnQueue.end(), [](const Character* a, const Character* b) {
+        //  std::sort(TurnQueue.begin(), TurnQueue.end(), [](const std::shared_ptr<Character> a, const std::shared_ptr<Character> b) {
         //      int aLength = std::strlen(a->Id);
         //      int bLength = std::strlen(b->Id);
         //      return aLength < bLength;
@@ -85,10 +86,10 @@ void BattleField::SetUpGame()
     }
 }
 
-Character *BattleField::CreateCharacter(int classIndex, float health, float baseDamage, const char *id, const char *sprite)
+std::shared_ptr<Character> BattleField::CreateCharacter(int classIndex, float health, float baseDamage, const char *id, const char *sprite)
 {
     Types::CharacterClass characterClass = (Types::CharacterClass)classIndex;
-    auto PlayerCharacter = new Character(characterClass);
+    auto PlayerCharacter = std::make_shared<Character>(characterClass);
     PlayerCharacter->Health = health;
     PlayerCharacter->BaseDamage = baseDamage;
     PlayerCharacter->DamageMultiplier = GetRandomFloat(0.2, 1.0); // TODO class influence in life and damage
@@ -102,12 +103,12 @@ void BattleField::StartTurn()
     printf("\nLogs: \n");
     for (auto it = TurnQueue.begin(); it != TurnQueue.end(); ++it)
     {
-        auto currentCharacter = (*it);
-        auto enemyTarget = CharacterAndTargets[currentCharacter];
+        std::shared_ptr<Character> currentCharacter = (*it);
+        std::shared_ptr<Character> enemyTarget = CharacterAndTargets[currentCharacter];
 
         if (currentCharacter->IsDead())
         {
-            return;
+            continue;
         }
         
         // TODO decide if should move or attack or heal it self. if attacks decide if should use a special skill
@@ -135,7 +136,7 @@ void BattleField::StartTurn()
     HandleTurn();
 }
 
-void BattleField::HandleCombat(Character *attacker, Character *target)
+void BattleField::HandleCombat(std::shared_ptr<Character>attacker, std::shared_ptr<Character>target)
 {
     engine->DrawText("%s launch a attack in %s", attacker->Id, target->Id);
     // attack target
@@ -164,6 +165,10 @@ void BattleField::HandleTurn()
     else if (EnemyCharacter->IsDead())
     {
         printf("\nEnemy slayed\n");
+        engine->WaitInput();
+        engine->ClearCanvas();
+        engine->Stop();
+        printf("\nYou Win, thanks for play.\n");
         engine->WaitInput();
     }
     else
