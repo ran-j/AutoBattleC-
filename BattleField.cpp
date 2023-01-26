@@ -28,6 +28,7 @@ void BattleField::Init()
     while (!engine->ShouldQuit())
     {
         engine->Draw();
+        StartTurn();
     }
 
     return;
