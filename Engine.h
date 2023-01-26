@@ -34,6 +34,8 @@ public:
     bool IsCloseToTarget(Actor *actor, Actor *target);
     //Returns actor current grid
     std::vector<Types::GridBox>::iterator GetActorGrid(Actor *target);
+    //Clear user viewport
+    void ClearCanvas();
 
     int GetRandomInt(int min, int max);
 

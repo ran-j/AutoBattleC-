@@ -15,12 +15,23 @@ void Engine::Init(int lines, int Columns)
     bHasChanges = true;
 }
 
+void Engine::ClearCanvas()
+{
+    #ifdef __linux__ 
+        system("clear");
+    #elif _WIN32
+        system("cls");
+    #endif     
+}
+
 void Engine::Draw()
 {
     if (!bHasChanges)
     {
         return;
     }
+
+    ClearCanvas();
 
     for (int i = 0; i < mLines; i++)
     {
@@ -34,8 +45,7 @@ void Engine::Draw()
                 Actor *target = Actors[index];
                 if (target)
                 {
-                    printf(target->GetSprite());
-                    printf("\t");
+                    printf("[%s]\t", target->GetSprite());
                 }
                 else
                 {
