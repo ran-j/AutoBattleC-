@@ -1,8 +1,16 @@
 #include "Grid.h"
 #include "Types.h"
 
+Grid::Grid()
+{
+}
 
-Grid::Grid(int Lines, int Columns)
+Grid::~Grid() 
+{
+    grids.clear();
+}
+
+void Grid::Init(int Lines, int Columns)
 {
     //Console.WriteLine("The battle field has been created\n");
     for (int i = 0; i < Lines; i++)
@@ -16,9 +24,4 @@ Grid::Grid(int Lines, int Columns)
         }
     }
 	//drawBattlefield(Lines, Columns);
-}
-
-Grid::~Grid() 
-{
-
 }

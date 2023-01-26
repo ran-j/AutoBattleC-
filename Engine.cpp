@@ -4,13 +4,14 @@
 
 Engine::Engine()
 {
+    grid = new Grid();
 }
 
 void Engine::Init(int lines, int Columns)
 {
     mLines = lines;
     mColumns = Columns;
-    grid = new Grid(lines, Columns);
+    grid->Init(lines, Columns);
     bHasChanges = true;
 }
 
