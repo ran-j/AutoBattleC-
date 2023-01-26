@@ -39,6 +39,7 @@ void Character::WalkTo(bool CanWalk)
 {
 }
 
+//this has a serious problem to handle data
 bool Character::StartTurn(Grid *battlefield)
 {
 
@@ -54,54 +55,59 @@ bool Character::StartTurn(Grid *battlefield)
 
         if (currentBox.xIndex > target->currentBox.xIndex)
         {
-            if (std::find_if(battlefield->grids.begin(), battlefield->grids.end(), [&](const Types::GridBox &box)
-                             { return box.Index == currentBox.Index; }) != battlefield->grids.end())
+            auto newIndex = currentBox.Index - 1;
+            if (newIndex >= 0 && newIndex < battlefield->grids.size())
 
             {
-                currentBox.ocupied = false;
-                battlefield->grids[currentBox.Index] = currentBox;
-
-                currentBox = (battlefield->grids[currentBox.Index - 1]);
-                currentBox.ocupied = true;
-                battlefield->grids[currentBox.Index] = currentBox;
-                // Console.WriteLine($"Player {PlayerIndex} walked left\n");
-    
+                battlefield->grids[currentBox.Index].ocupied = false;
+                battlefield->grids[newIndex].ocupied = true;
+                currentBox = battlefield->grids[newIndex];
+                // Console.WriteLine($"Player {PlayerIndex} walked left\n");    
                 return true;
             }
         }
         else if (currentBox.xIndex < target->currentBox.xIndex)
         {
-            currentBox.ocupied = false;
-            battlefield->grids[currentBox.Index] = currentBox;
-            currentBox = (battlefield->grids[currentBox.Index + 1]);
-            battlefield->grids[currentBox.Index] = currentBox;
-            // Console.WriteLine($"Player {PlayerIndex} walked right\n");
-            return true;
+            auto newIndex = currentBox.Index + 1;
+            if (newIndex >= 0 && newIndex < battlefield->grids.size())
+
+            {
+                battlefield->grids[currentBox.Index].ocupied = false;
+                battlefield->grids[newIndex].ocupied = true;
+                currentBox = battlefield->grids[newIndex];
+                // Console.WriteLine($"Player {PlayerIndex} walked right\n");
+                return true;
+            }
         }
 
         if (currentBox.yIndex > target->currentBox.yIndex)
         {
-            currentBox.ocupied = false;
-            battlefield->grids[currentBox.Index] = currentBox;
-            currentBox = battlefield->grids[(currentBox.Index - battlefield->xLenght)];
-            currentBox.ocupied = true;
-            battlefield->grids[currentBox.Index] = currentBox;
-            // Console.WriteLine($"PlayerB {PlayerIndex} walked up\n");
-            return true;
+            auto newIndex = currentBox.Index - battlefield->xLenght;
+            if (newIndex >= 0 && newIndex < battlefield->grids.size())
+
+            {
+                battlefield->grids[currentBox.Index].ocupied = false;
+                battlefield->grids[newIndex].ocupied = true;
+                currentBox = battlefield->grids[newIndex];
+                // Console.WriteLine($"PlayerB {PlayerIndex} walked up\n");
+                return true;
+            }
         }
         else if (currentBox.yIndex < target->currentBox.yIndex)
         {
-            currentBox.ocupied = false;
-            battlefield->grids[currentBox.Index] = currentBox;
-            currentBox = battlefield->grids[currentBox.Index + battlefield->xLenght];
-            currentBox.ocupied = true;
-            battlefield->grids[currentBox.Index] = currentBox;
-            // Console.WriteLine($"Player {PlayerIndex} walked down\n");
+            auto newIndex = currentBox.Index + battlefield->xLenght;
+            if (newIndex >= 0 && newIndex < battlefield->grids.size())
 
-            return true;
+            {
+                battlefield->grids[currentBox.Index].ocupied = false;
+                battlefield->grids[newIndex].ocupied = true;
+                currentBox = battlefield->grids[newIndex];
+                // Console.WriteLine($"Player {PlayerIndex} walked down\n");
+                return true;
+            }
         }
+        return false;
     }
-    return false;
 }
 
 bool Character::CheckCloseTargets(Grid *battlefield)

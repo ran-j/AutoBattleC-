@@ -62,6 +62,7 @@ void BattleField::CreatePlayerCharacter(int classIndex)
     PlayerCharacter->Health = 100;
     PlayerCharacter->BaseDamage = 20;
     PlayerCharacter->PlayerIndex = 0;
+    PlayerCharacter->Icon = "P";
 
     CreateEnemyCharacter();
 
@@ -82,6 +83,7 @@ void BattleField::CreateEnemyCharacter()
 
     PlayerCharacter->BaseDamage = 20;
     PlayerCharacter->PlayerIndex = 1;
+    PlayerCharacter->Icon = "E";
     StartGame();
 
 }

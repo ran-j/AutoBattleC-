@@ -21,7 +21,7 @@ public:
     std::shared_ptr<Character> target;
 
     bool IsDead;
-    char Icon;
+    const char * Icon;
 
     Types::GridBox currentBox;
 
