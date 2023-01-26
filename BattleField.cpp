@@ -51,8 +51,7 @@ void BattleField::SetUpGame()
         PlayerCharacter = CreateCharacter(classIndex, 100, 20, "player", "P");
         engine->InsertActor(PlayerCharacter);
 
-        int randomClass = GetRandomInt(1, 4);
-        EnemyCharacter = CreateCharacter(randomClass, 100, 20, "enemy1", "E");
+        EnemyCharacter = CreateCharacter(GetRandomInt(1, 4), 100, 20, "enemy1", "E");
         engine->InsertActor(EnemyCharacter);
 
         CharacterAndTargets[PlayerCharacter] = EnemyCharacter;
@@ -73,6 +72,7 @@ Character *BattleField::CreateCharacter(int classIndex, float health, float base
     PlayerCharacter->BaseDamage = baseDamage;
     PlayerCharacter->Id = id;
     PlayerCharacter->Sprite = sprite;
+    return PlayerCharacter;
 }
 
 void BattleField::StartTurn()

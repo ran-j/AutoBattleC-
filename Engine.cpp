@@ -26,7 +26,7 @@ void Engine::Draw()
         for (int j = 0; j < mColumns; j++)
         {
             int index = (mColumns * i + j);
-            Types::GridBox* currentGrid = &grid->grids[index];
+            Types::GridBox *currentGrid = &grid->grids[index];
 
             if (currentGrid->ocupied)
             {
@@ -35,7 +35,7 @@ void Engine::Draw()
                 {
                     printf(target->GetSprite());
                     printf("\t");
-                } 
+                }
                 else
                 {
                     printf("[X]\t");
@@ -53,11 +53,11 @@ void Engine::Draw()
     bHasChanges = false;
 }
 
-void Engine::InsertActor(Actor* target)
+void Engine::InsertActor(Actor *target)
 {
     _ASSERT(grid);
 
-    //maybe add a unique pointer ref in grids to character
+    // maybe add a unique pointer ref in grids to character
 
     int random = GetRandomInt(0, GetWorldSize());
     auto l_front = grid->grids.begin();
@@ -88,65 +88,81 @@ std::vector<Types::GridBox>::iterator Engine::GetActorGrid(Actor *target)
     return targetCurrentGrid;
 }
 
-//TODO this can be better
+// TODO this can be better
 void Engine::MoveActorToTarget(Actor *actor, Actor *target)
 {
-    auto actorCurrentGrid = GetActorGrid(actor); 
-    auto targetCurrentGrid = GetActorGrid(target); 
+    int gridSize = GetWorldSize();
+    auto actorCurrentGrid = GetActorGrid(actor);
+    auto targetCurrentGrid = GetActorGrid(target);
 
-    auto searchActorInGrids = std::find_if(grid->grids.begin(), grid->grids.end(), [&](const Types::GridBox &box) { return box.Index == actorCurrentGrid->Index; });
-    
-    if (searchActorInGrids != grid->grids.end()) //Move left
+    auto searchActorInGrids = std::find_if(grid->grids.begin(), grid->grids.end(), [&](const Types::GridBox &box)
+                                           { return box.Index == actorCurrentGrid->Index - 1; });
+
+    if (searchActorInGrids != grid->grids.end()) // Move left
     {
-        //leave the current grid
-        actorCurrentGrid->ocupied = false;
         int newIndex = actorCurrentGrid->Index - 1;
-        //Update locations maps
-        SetActorIndex(actor, newIndex);
-        //enter in grid
-        grid->grids[newIndex].ocupied = true;
-        //notify that has changes in grid
-        bHasChanges = true;
-        return;
+        if (newIndex >= 0 && newIndex < gridSize)
+        {
+            // leave the current grid
+            actorCurrentGrid->ocupied = false;
+            // Update locations maps
+            SetActorIndex(actor, newIndex);
+            // enter in grid
+            grid->grids[newIndex].ocupied = true;
+            // notify that has changes in grid
+            bHasChanges = true;
+            return;
+        }
     }
-    else if (actorCurrentGrid->xIndex < targetCurrentGrid->xIndex) //Move right
+    else if (actorCurrentGrid->xIndex < targetCurrentGrid->xIndex) // Move right
     {
-        //leave the current grid
-        actorCurrentGrid->ocupied = false;
         int newIndex = actorCurrentGrid->Index + 1;
-        //Update locations maps
-        SetActorIndex(actor, newIndex);
-        grid->grids[newIndex].ocupied = true;
-        //notify that has changes in grid
-        bHasChanges = true;
-        return;
+        if (newIndex >= 0 && newIndex < gridSize)
+        {
+            // leave the current grid
+            actorCurrentGrid->ocupied = false;
+            // Update locations maps
+            SetActorIndex(actor, newIndex);
+            // enter in grid
+            grid->grids[newIndex].ocupied = true;
+            // notify that has changes in grid
+            bHasChanges = true;
+            return;
+        }
     }
 
-    if (actorCurrentGrid->yIndex < targetCurrentGrid->yIndex) //Move up
+    if (actorCurrentGrid->yIndex < targetCurrentGrid->yIndex) // Move up
     {
-        //leave the current grid
-        actorCurrentGrid->ocupied = false;
         int newIndex = actorCurrentGrid->Index - mLines;
-        //Update locations maps
-        SetActorIndex(actor, newIndex);
-        grid->grids[newIndex].ocupied = true;
-        //notify that has changes in grid
-        bHasChanges = true;
-        return;
+        if (newIndex >= 0 && newIndex < gridSize)
+        {
+            // leave the current grid
+            actorCurrentGrid->ocupied = false;
+            // Update locations maps
+            SetActorIndex(actor, newIndex);
+            // enter in grid
+            grid->grids[newIndex].ocupied = true;
+            // notify that has changes in grid
+            bHasChanges = true;
+            return;
+        }
     }
-    else if (actorCurrentGrid->yIndex < targetCurrentGrid->yIndex) //move  down
+    else if (actorCurrentGrid->yIndex < targetCurrentGrid->yIndex) // move  down
     {
-        //leave the current grid
-        actorCurrentGrid->ocupied = false;
         int newIndex = actorCurrentGrid->Index + mLines;
-        //Update locations maps
-        SetActorIndex(actor, newIndex);
-        grid->grids[newIndex].ocupied = true;
-        //notify that has changes in grid
-        bHasChanges = true;
-        return;
+        if (newIndex >= 0 && newIndex < gridSize)
+        {
+            // leave the current grid
+            actorCurrentGrid->ocupied = false;
+            // Update locations maps
+            SetActorIndex(actor, newIndex);
+            // enter in grid
+            grid->grids[newIndex].ocupied = true;
+            // notify that has changes in grid
+            bHasChanges = true;
+            return;
+        }
     }
-
 }
 
 void Engine::SetActorIndex(Actor *target, int index)
@@ -155,28 +171,40 @@ void Engine::SetActorIndex(Actor *target, int index)
     ActorsWorldPositions[target->Id] = index;
 }
 
-// bool Engine::IsCloseToTarget(Actor *target, Actor *target)
-// {
-//     auto actorCurrentGrid = GetActorGrid(actor); 
-//     auto targetCurrentGrid = GetActorGrid(target); 
-// }
+bool Engine::IsCloseToTarget(Actor *actor, Actor *target)
+{
+    auto actorCurrentGrid = GetActorGrid(actor);
+    auto targetCurrentGrid = GetActorGrid(target);
 
+    if (actorCurrentGrid->xIndex == targetCurrentGrid->xIndex && actorCurrentGrid->yIndex == targetCurrentGrid->yIndex)
+    {
+        return true;
+    }
+    else if (actorCurrentGrid->xIndex == targetCurrentGrid->xIndex && actorCurrentGrid->yIndex == targetCurrentGrid->yIndex + 1)
+    {
+        return true;
+    }
+    else if (actorCurrentGrid->xIndex == targetCurrentGrid->xIndex && actorCurrentGrid->yIndex == targetCurrentGrid->yIndex - 1)
+    {
+        return true;
+    }
+    else if (actorCurrentGrid->xIndex == targetCurrentGrid->xIndex + 1 && actorCurrentGrid->yIndex == targetCurrentGrid->yIndex)
+    {
+        return true;
+    }
+    else if (actorCurrentGrid->xIndex == targetCurrentGrid->xIndex - 1 && actorCurrentGrid->yIndex == targetCurrentGrid->yIndex)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
-
-
-
-
-
-
-
-
-
-
-
-//TODO move this to utils
+// TODO move this to utils
 int Engine::GetRandomInt(int min, int max)
 {
     int range = max - min + 1;
     return rand() % range + min;
 }
-

@@ -30,6 +30,8 @@ public:
     int GetActorLocation(Actor *target);
     //Move Actor to a target location 
     void MoveActorToTarget(Actor *actor, Actor *target);
+    //Check if a actor is close to another target
+    bool IsCloseToTarget(Actor *actor, Actor *target);
     //Returns actor current grid
     std::vector<Types::GridBox>::iterator GetActorGrid(Actor *target);
 
