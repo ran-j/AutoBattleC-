@@ -20,9 +20,6 @@ BattleField::BattleField()
 
 void BattleField::Init()
 {
-    //TODO player should inform the grid size
-    engine->Init(5, 5);
-
     SetUpGame();
 
     while (!engine->ShouldQuit())
@@ -36,6 +33,16 @@ void BattleField::Init()
 
 void BattleField::SetUpGame()
 {
+    printf("Inform battlefield Lines:\n");
+    int bfLines = 0;
+    cin >> bfLines;
+
+    printf("Inform battlefield Columns:\n");
+    int bfColumns = 0;
+    cin >> bfColumns;
+
+    engine->Init(bfLines, bfColumns);
+
     // asks for the player to choose between for possible classes via console.
     printf("Choose Between One of this Classes:\n");
     printf("[1] Paladin, [2] Warrior, [3] Cleric, [4] Archer \n");
