@@ -1,0 +1,182 @@
+#include "Engine.h"
+
+#include "Actor.h"
+
+Engine::Engine()
+{
+}
+
+void Engine::Init(int lines, int Columns)
+{
+    mLines = lines;
+    mColumns = Columns;
+    grid = new Grid(lines, Columns);
+    bHasChanges = true;
+}
+
+void Engine::Draw()
+{
+    if (!bHasChanges)
+    {
+        return;
+    }
+
+    for (int i = 0; i < mLines; i++)
+    {
+        for (int j = 0; j < mColumns; j++)
+        {
+            int index = (mColumns * i + j);
+            Types::GridBox* currentGrid = &grid->grids[index];
+
+            if (currentGrid->ocupied)
+            {
+                Actor *target = Actors[index];
+                if (target)
+                {
+                    printf(target->GetSprite());
+                    printf("\t");
+                } 
+                else
+                {
+                    printf("[X]\t");
+                }
+            }
+            else
+            {
+                printf("[ ]\t");
+            }
+        }
+        printf("\n");
+    }
+    printf("\n");
+
+    bHasChanges = false;
+}
+
+void Engine::InsertActor(Actor* target)
+{
+    _ASSERT(grid);
+
+    //maybe add a unique pointer ref in grids to character
+
+    int random = GetRandomInt(0, GetWorldSize());
+    auto l_front = grid->grids.begin();
+    advance(l_front, random);
+
+    if (!l_front->ocupied)
+    {
+        l_front->ocupied = true;
+        SetActorIndex(target, random);
+        bHasChanges = true;
+    }
+    else
+    {
+        InsertActor(target);
+    }
+}
+
+int Engine::GetActorLocation(Actor *target)
+{
+    return ActorsWorldPositions[target->Id];
+}
+
+std::vector<Types::GridBox>::iterator Engine::GetActorGrid(Actor *target)
+{
+    int targetCurrentIndex = GetActorLocation(target);
+    auto targetCurrentGrid = grid->grids.begin();
+    advance(targetCurrentGrid, targetCurrentIndex);
+    return targetCurrentGrid;
+}
+
+//TODO this can be better
+void Engine::MoveActorToTarget(Actor *actor, Actor *target)
+{
+    auto actorCurrentGrid = GetActorGrid(actor); 
+    auto targetCurrentGrid = GetActorGrid(target); 
+
+    auto searchActorInGrids = std::find_if(grid->grids.begin(), grid->grids.end(), [&](const Types::GridBox &box) { return box.Index == actorCurrentGrid->Index; });
+    
+    if (searchActorInGrids != grid->grids.end()) //Move left
+    {
+        //leave the current grid
+        actorCurrentGrid->ocupied = false;
+        int newIndex = actorCurrentGrid->Index - 1;
+        //Update locations maps
+        SetActorIndex(actor, newIndex);
+        //enter in grid
+        grid->grids[newIndex].ocupied = true;
+        //notify that has changes in grid
+        bHasChanges = true;
+        return;
+    }
+    else if (actorCurrentGrid->xIndex < targetCurrentGrid->xIndex) //Move right
+    {
+        //leave the current grid
+        actorCurrentGrid->ocupied = false;
+        int newIndex = actorCurrentGrid->Index + 1;
+        //Update locations maps
+        SetActorIndex(actor, newIndex);
+        grid->grids[newIndex].ocupied = true;
+        //notify that has changes in grid
+        bHasChanges = true;
+        return;
+    }
+
+    if (actorCurrentGrid->yIndex < targetCurrentGrid->yIndex) //Move up
+    {
+        //leave the current grid
+        actorCurrentGrid->ocupied = false;
+        int newIndex = actorCurrentGrid->Index - mLines;
+        //Update locations maps
+        SetActorIndex(actor, newIndex);
+        grid->grids[newIndex].ocupied = true;
+        //notify that has changes in grid
+        bHasChanges = true;
+        return;
+    }
+    else if (actorCurrentGrid->yIndex < targetCurrentGrid->yIndex) //move  down
+    {
+        //leave the current grid
+        actorCurrentGrid->ocupied = false;
+        int newIndex = actorCurrentGrid->Index + mLines;
+        //Update locations maps
+        SetActorIndex(actor, newIndex);
+        grid->grids[newIndex].ocupied = true;
+        //notify that has changes in grid
+        bHasChanges = true;
+        return;
+    }
+
+}
+
+void Engine::SetActorIndex(Actor *target, int index)
+{
+    Actors[index] = target;
+    ActorsWorldPositions[target->Id] = index;
+}
+
+// bool Engine::IsCloseToTarget(Actor *target, Actor *target)
+// {
+//     auto actorCurrentGrid = GetActorGrid(actor); 
+//     auto targetCurrentGrid = GetActorGrid(target); 
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+//TODO move this to utils
+int Engine::GetRandomInt(int min, int max)
+{
+    int range = max - min + 1;
+    return rand() % range + min;
+}
+

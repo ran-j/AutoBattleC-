@@ -4,8 +4,6 @@
 
 Grid::Grid(int Lines, int Columns)
 {
-    xLenght = Lines;
-    yLength = Columns;
     //Console.WriteLine("The battle field has been created\n");
     for (int i = 0; i < Lines; i++)
     {
@@ -23,27 +21,4 @@ Grid::Grid(int Lines, int Columns)
 Grid::~Grid() 
 {
 
-}
-
-//TODO remove this parameters
-void Grid::drawBattlefield(int Lines, int Columns)
-{
-    for (int i = 0; i < Lines; i++)
-    {
-        for (int j = 0; j < Columns; j++)
-        {
-            Types::GridBox* currentgrid = &grids[(Columns * i + j)];
-            if (currentgrid->ocupied)
-            {
-                //TODO draw player different from enemy
-                printf("[X]\t");
-            }
-            else
-            {
-                printf("[ ]\t");
-            }
-        }
-        printf("\n");
-    }
-    printf("\n");
 }

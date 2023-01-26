@@ -1,52 +1,41 @@
 #pragma once
-#include "Character.h"
-#include "Types.h"
+
 #include <list>
 #include <iostream>
-#include "Grid.h"
+#include <map>
+
 using namespace std;
+
+class Engine;
+class Character;
 class BattleField
 {
 public:
 
 	BattleField();
 
-	Grid* grid;
-	Types::GridBox* PlayerCurrentLocation;
-	Types::GridBox* EnemyCurrentLocation;
+	void Init();
 
-	list<shared_ptr<Character>> AllPlayers;
-
-	shared_ptr<Character> PlayerCharacter;
-
-	//Character* PlayerCharacter;
-	shared_ptr<Character> EnemyCharacter;
-	
-	int currentTurn;
-	int numberOfPossibleTiles;
-
-
-	void Setup();
-
-	void GetPlayerChoice();
-
-	void CreatePlayerCharacter(int classIndex);
-
-	void CreateEnemyCharacter();
-
-	void StartGame();
-
+private:
+	void SetUpGame();
 	void StartTurn();
-
 	void HandleTurn();
 
+	Character* CreateCharacter(int classIndex, float health, float baseDamage, const char* id, const char* sprite);
+
+
 	int GetRandomInt(int min, int max);
+	
+private:
+	Engine* engine;
 
-	void AlocatePlayers();
+	Character* PlayerCharacter; //TODO unique pointer
+	Character* EnemyCharacter; //TODO unique pointer
 
-	void AlocatePlayerCharacter();
+	std::map<Character *, Character*> CharacterAndTargets;
 
-	void AlocateEnemyCharacter();
+	bool bPlayerActFirst;
+	int currentTurn = 0;
 };
 
 

@@ -10,12 +10,9 @@ public:
     Grid(int Lines, int Columns);
     ~Grid();
 
+private:
     std::vector<Types::GridBox> grids;
-
-    int xLenght;
-    int yLength;
-    
-    // prints the matrix that indicates the tiles of the battlefield
-    void drawBattlefield(int Lines, int Columns);
+private:
+    friend class Engine;
 };
 
