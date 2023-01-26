@@ -64,7 +64,7 @@ void Engine::Draw()
     bHasChanges = false;
 }
 
-void Engine::InsertActor(Actor *target)
+void Engine::SpawnActor(Actor *target)
 {
     _ASSERT(grid);
 
@@ -82,7 +82,7 @@ void Engine::InsertActor(Actor *target)
     }
     else
     {
-        InsertActor(target);
+        SpawnActor(target);
     }
 }
 

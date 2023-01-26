@@ -21,7 +21,7 @@ public:
     //Will draw the grid with actors in place
     void Draw();
     //Add actor to render queue 
-    void InsertActor(Actor *target);
+    void SpawnActor(Actor *target);
     //Tells if should continue in game loop
     inline bool ShouldQuit() { return bShouldQuit; }
     //Return the world tiles size

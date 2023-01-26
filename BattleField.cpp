@@ -50,10 +50,10 @@ void BattleField::SetUpGame()
     case 3:
     case 4:
         PlayerCharacter = CreateCharacter(classIndex, 100, 20, "player", "P");
-        engine->InsertActor(PlayerCharacter);
+        engine->SpawnActor(PlayerCharacter);
 
         EnemyCharacter = CreateCharacter(GetRandomInt(1, 4), 100, 20, "enemy1", "E");
-        engine->InsertActor(EnemyCharacter);
+        engine->SpawnActor(EnemyCharacter);
 
         CharacterAndTargets[PlayerCharacter] = EnemyCharacter;
         CharacterAndTargets[EnemyCharacter] = PlayerCharacter;
