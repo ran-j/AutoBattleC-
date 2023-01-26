@@ -106,9 +106,19 @@ void BattleField::StartTurn() {
     {
         //AllPlayers.Sort();  
     }
-   
+    
+    bool shouldReDraw = false;
     for (auto it = AllPlayers.begin(); it != AllPlayers.end(); ++it) {
-        (*it)->StartTurn(grid);
+       bool haveMoved = (*it)->StartTurn(grid);
+       if(haveMoved)
+       {
+        shouldReDraw = true;        
+       }
+    }
+
+    if (shouldReDraw)
+    {
+        grid->drawBattlefield(5, 5);
     }
 
     currentTurn++;
@@ -137,13 +147,10 @@ void BattleField::HandleTurn()
         printf("Click on any key to start the next turn...\n");
         printf("\n");
 
-        //TODO only clear if has any change in field
         #ifdef __linux__ 
             system("read");
-            system("clear");
         #elif _WIN32
             system("pause");
-            system("cls");
         #endif       
 
         printf("\n");

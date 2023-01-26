@@ -28,6 +28,11 @@ Grid::~Grid()
 //TODO remove this parameters
 void Grid::drawBattlefield(int Lines, int Columns)
 {
+    #ifdef __linux__ 
+        system("clear");
+    #elif _WIN32
+        system("cls");
+    #endif       
     for (int i = 0; i < Lines; i++)
     {
         for (int j = 0; j < Columns; j++)

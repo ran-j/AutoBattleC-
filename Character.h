@@ -33,7 +33,7 @@ public:
 
     void WalkTo(bool CanWalk);
 
-    void StartTurn(Grid* battlefield);
+    bool StartTurn(Grid* battlefield);
 
     bool CheckCloseTargets(Grid* battlefield);
 
