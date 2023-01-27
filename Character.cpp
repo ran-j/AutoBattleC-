@@ -121,7 +121,6 @@ bool Character::CanPlayTurnAndPrintMessageIfCant()
 
 	if (blockAnyActionEffect.size() > 0)
 	{
-		// TODO wrap this in a function maybe
 		std::string effectNames;
 		for (auto it = blockAnyActionEffect.begin(); it != blockAnyActionEffect.end(); ++it)
 		{
