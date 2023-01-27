@@ -1,6 +1,9 @@
 #include "Character.h"
 #include "Utils.h"
 #include "ConstructorHelper.h"
+#include "Engine.h"
+
+#include <string>
 
 using namespace std;
 Character::Character(Types::CharacterClass charcaterClass)
@@ -14,13 +17,13 @@ Character::~Character()
 
 bool Character::TakeDamage(float amount)
 {
+	// TODO add miss chance base on attributes
 	if ((Health -= amount) <= 0)
 	{
 		bIsDead = true;
 		Die();
-		return true;
 	}
-	return false;
+	return true;
 }
 
 void Character::Heal(float amount)
@@ -38,37 +41,38 @@ void Character::Die()
 
 float Character::Attack(std::shared_ptr<Character> target)
 {
-	// TODO add miss chance
 	float dice = Utils::RollD4();
 	float damage = BaseDamage * DamageMultiplier * dice;
 
-	target->TakeDamage(damage);
+	bool didTakeDamage = !target->TakeDamage(damage);
 
-	// 40% to apply bleed
-	if(Utils::GetRandomBoolWithProbability(40))
+	if (didTakeDamage)
 	{
-		auto bleedEffect = ConstructorHelper::CreateStatusEffect(Types::Bleed);
-		printf("Applying bleed effect on target \n");
-		target->ApplyEffect(bleedEffect);
+		return 0.0f;
+	}
+
+	if (!target->IsDead())
+	{
+		// TODO a for list with all negative status that this character can apply and their chance
+		if (Utils::GetRandomBoolWithProbability(Utils::GetRandomInt(10, 40))) // from 10 to 40 to apply bleed
+		{
+			auto bleedEffect = ConstructorHelper::CreateStatusEffect(Types::Bleed);
+			Engine::DrawText("%s manage do apply %s on %s", this->Id, bleedEffect->name, target->Id);
+			target->ApplyEffect(bleedEffect);
+		}
+		else if (Utils::GetRandomBoolWithProbability(Utils::GetRandomInt(80, 90))) // from 1 to 20 to apply stun
+		{
+			auto newEffect = ConstructorHelper::CreateStatusEffect(Types::KnockBack);
+			Engine::DrawText("%s manage do apply %s on %s", this->Id, newEffect->name, target->Id);
+			target->ApplyEffect(newEffect);
+		}
 	}
 
 	return damage;
 }
 
-Types::ActionType Character::GetActionWhenNearEnemy()
+void Character::ProcessStatusEffects()
 {
-	// TODO
-	return Types::ActionType::Attack;
-}
-
-std::list<const char *> Character::ProcessStatusEffects()
-{
-	auto textEffects = list<const char *>();
-	if (bIsDead)
-	{
-		return textEffects;
-	}
-
 	for (auto it = statusEffects.begin(); it != statusEffects.end(); ++it)
 	{
 		Types::StatusEffect *currentEffect = (*it);
@@ -76,33 +80,100 @@ std::list<const char *> Character::ProcessStatusEffects()
 		{
 		case Types::ActionType::Attack:
 			TakeDamage(currentEffect->amount);
-
-			//Should I use stringstream ?
-			char buffer1[100];
-			sprintf_s(buffer1, "Suffered %f of damage because of %s effect", currentEffect->amount, currentEffect->name);
-
-			textEffects.push_back(buffer1);
+			Engine::DrawText("%s suffered %f of damage because of %s effect", this->Id, currentEffect->amount, currentEffect->name);
 			break;
 		case Types::ActionType::Heal:
-
-			char buffer2[100];
-			sprintf_s(buffer2, "Heals %f of life because of %s effect", currentEffect->amount, currentEffect->name);
-			textEffects.push_back(buffer2);
-
 			Heal(currentEffect->amount);
+			Engine::DrawText("%s heals %f percent of life because of %s effect", this->Id, currentEffect->amount, currentEffect->name);
 			break;
 		}
 	}
-
-	return textEffects;
 }
 
-bool Character::CanMove()
+bool Character::CanMoveAndPrintMessageIfCant()
 {
+	std::list<Types::StatusEffect *> blockMovementEffectList = GetEffectByAction(Types::ActionType::Move);
+	if (blockMovementEffectList.size() > 0)
+	{
+		auto first = blockMovementEffectList.begin(); // for this man we can inform only one
+		Engine::DrawText("%s can't move because of effect(s) %s", this->Id, (*first)->name);
+		return false;
+	}
 	return true;
 }
 
-bool CanAttack()
+bool Character::CanAttackAndPrintMessageIfCant()
 {
+	std::list<Types::StatusEffect *> blockMovementEffectList = GetEffectByAction(Types::ActionType::Attack);
+	if (blockMovementEffectList.size() > 0)
+	{
+		auto first = blockMovementEffectList.begin(); // for this man we can inform only one
+		Engine::DrawText("%s can't attack because of effect(s) %s", this->Id, (*first)->name);
+		return false;
+	}
 	return true;
+}
+
+void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, std::function<void()> moveToTargetLocationFunc)
+{
+	std::list<Types::StatusEffect *> blockAnyActionEffect = GetEffectByAction(Types::ActionType::Any);
+
+	if (blockAnyActionEffect.size() > 0)
+	{
+		// TODO wrap this in a function maybe
+		std::string effectNames;
+		for (auto it = blockAnyActionEffect.begin(); it != blockAnyActionEffect.end(); ++it)
+		{
+			effectNames += (*it)->name;
+			effectNames += ", ";
+		}
+		effectNames = effectNames.substr(0, effectNames.length() - 2); // remove the last ", " from the effectNames string
+		Engine::DrawText("%s can't do anything because of effect(s) %s", this->Id, effectNames.c_str());
+	}
+
+	if (isNearTarget)
+	{
+		// TODO decide if should attack or use skill
+		if (CanAttackAndPrintMessageIfCant())
+		{
+			Engine::DrawText("%s launch a attack in %s", this->Id, target->Id);
+			float damage = Attack(target);
+			if (damage == 0)
+			{
+				Engine::DrawText("%s attack with rough but miss the attack on %s", this->Id, target->Id);
+			}
+			else
+			{
+				Engine::DrawText("%s inflicted %f damage points in %s with bare hands", this->Id, damage, target->Id); // TODO each class have a different attack
+				if (target->IsDead())
+				{
+					Engine::DrawText("%s: Take that %s", this->Id, target->Id);
+					return;
+				}
+			}
+		}
+	}
+	else
+	{
+		// decide if should move or use skill
+		if (CanMoveAndPrintMessageIfCant())
+		{	
+			moveToTargetLocationFunc();
+			Engine::DrawText("%s move to battle against %s", this->Id, target->Id);
+		}
+	}
+}
+
+std::list<Types::StatusEffect *> Character::GetEffectByAction(Types::ActionType actionType)
+{
+	auto foundedEffects = std::list<Types::StatusEffect *>();
+	for (auto it = statusEffects.begin(); it != statusEffects.end(); ++it)
+    {
+		Types::StatusEffect *currentEffect = (*it);
+		if (currentEffect->targetAction == actionType)
+		{
+			foundedEffects.push_back(currentEffect);
+		}
+	}
+	return foundedEffects;
 }

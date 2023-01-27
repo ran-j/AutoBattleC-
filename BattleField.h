@@ -38,7 +38,7 @@ private:
 	std::shared_ptr<Character> PlayerCharacter;
 
 	std::map<std::shared_ptr<Character>, std::shared_ptr<Character>> CharacterAndTargets;
-	list<std::shared_ptr<Character>> TurnQueue;
+	list<std::shared_ptr<Character>> PlayersQueue;
 
 	int currentTurn = 0;
 };

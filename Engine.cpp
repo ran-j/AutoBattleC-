@@ -1,9 +1,7 @@
 #include "Engine.h"
 #include "Actor.h"
 #include "Utils.h"
-
-#include <stdarg.h>
-
+ 
 Engine::Engine()
 {
     grid = new Grid();
@@ -172,17 +170,4 @@ bool Engine::IsCloseToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<Actor
     double oneTileDistance = 1;
 
     return dist <= oneTileDistance;
-}
-
-void Engine::DrawText(const char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    vfprintf(stdout, format, args);
-    printf("\n");
-    va_end(args);
-
-    // wait input to proceed
-    WaitInput();
-    bHasChanges = true;
 }

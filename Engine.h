@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include <stdarg.h>
 
 // limitation the render queue is sync if you try to run async you will lose data
 
@@ -21,6 +22,26 @@ public:
     void Init(int lines, int Columns);
     // Will draw the grid with actors in place
     void Draw();
+    // Draw user text on viewport
+    static inline void DrawText(const char *format, ...)
+    {
+        va_list args;
+        va_start(args, format);
+        vfprintf(stdout, format, args);
+        printf("\n");
+        va_end(args);
+    }
+    //Wait to user input
+    static inline void WaitInput()
+    {
+#ifdef __linux__
+        system("read");
+#elif _WIN32
+        system("pause");
+#endif
+        printf("\n");
+    };
+    
     // Add actor to render queue
     void SpawnActor(std::shared_ptr<Actor> target);
     //Destroy actor to render queue
@@ -39,21 +60,9 @@ public:
     std::vector<Types::GridBox>::iterator GetActorGrid(std::shared_ptr<Actor> target);
     // Clear user viewport
     void ClearCanvas();
-    // Draw user text on viewport
-    void DrawText(const char *format, ...); //TODO make static in line
     // Tells engine to stop render
     inline void Stop() { bShouldQuit = true; };
-    //Wait to user input
-    inline void WaitInput()
-    {
-#ifdef __linux__
-        system("read");
-#elif _WIN32
-        system("pause");
-#endif
-        printf("\n");
-    };
- 
+
 private:
     //Set Actor Index
     void SetActorIndex(std::shared_ptr<Actor> target, int index);
