@@ -1,4 +1,5 @@
 #include "Character.h"
+#include "Utils.h"
  
 using namespace std;
 Character::Character(Types::CharacterClass charcaterClass)
@@ -29,7 +30,8 @@ void Character::Die()
 float Character::Attack(std::shared_ptr<Character> target) 
 {
 	//TODO add miss chance
-    float damage = BaseDamage * DamageMultiplier;
+	float dice = Utils::RollD4();
+    float damage = BaseDamage * DamageMultiplier * dice;
 	target->TakeDamage(damage);
 	return damage;
 }
