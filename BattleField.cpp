@@ -147,16 +147,16 @@ void BattleField::HandleTurn()
         {
             if (currentCharacter->Id == PlayerCharacter->Id)
             {
-                engine->ClearCanvas();
-                engine->Stop();
                 Engine::DrawText("\nYOU DIED\n");
                 Engine::WaitInput();
+                engine->ClearCanvas();
+                engine->Stop();
                 return;
             }
             else
             {
                 engine->DestroyActor(currentCharacter);
-                Engine::DrawText("Enemy %s was slayed", currentCharacter->Id);
+                Engine::DrawText(" %s was killed", currentCharacter->Id);
                 it = PlayersQueue.erase(it);
             }
         }
