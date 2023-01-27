@@ -51,6 +51,7 @@ public:
 #elif _WIN32
         system("pause");
 #endif
+        printf("\n");
     };
 
     int GetRandomInt(int min, int max);
