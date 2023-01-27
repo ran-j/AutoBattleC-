@@ -57,27 +57,19 @@ void BattleField::SetUpGame()
     case 2:
     case 3:
     case 4:
-        PlayerCharacter = CreateCharacter(classIndex, 100, 200, "Hero", "P");
+        PlayerCharacter = CreateCharacter(classIndex, 100, 20, "Hero", "P");
         engine->SpawnActor(PlayerCharacter);
 
-        EnemyCharacter = CreateCharacter(GetRandomInt(1, 4), 100, 20, "Evil Man 1", "E");
-        engine->SpawnActor(EnemyCharacter);
+        CharacterAndTargets[PlayerCharacter] = CreateCharacter(GetRandomInt(1, 4), 100, 200, "Evil Man 1", "E");
+        engine->SpawnActor(CharacterAndTargets[PlayerCharacter]);
 
-        CharacterAndTargets[PlayerCharacter] = EnemyCharacter;
-        CharacterAndTargets[EnemyCharacter] = PlayerCharacter;
+        CharacterAndTargets[CharacterAndTargets[PlayerCharacter]] = PlayerCharacter;
 
         TurnQueue.push_back(PlayerCharacter);
-        TurnQueue.push_back(EnemyCharacter);
+        TurnQueue.push_back(CharacterAndTargets[PlayerCharacter]);
 
         // shuffle list to prevent player or enemy always init first
         // std::shuffle(TurnQueue.begin(), TurnQueue.end(), std::mt19937{ std::random_device{}() }); //wtf this gives me a error
-
-        // HAHAHAHAHHAHA SHOULD I ????
-        //  std::sort(TurnQueue.begin(), TurnQueue.end(), [](const std::shared_ptr<Character> a, const std::shared_ptr<Character> b) {
-        //      int aLength = std::strlen(a->Id);
-        //      int bLength = std::strlen(b->Id);
-        //      return aLength < bLength;
-        //  });
 
         break;
     default:
@@ -110,8 +102,7 @@ void BattleField::StartTurn()
         {
             continue;
         }
-        
-        // TODO decide if should move or attack or heal it self. if attacks decide if should use a special skill
+
         if (engine->IsCloseToTarget(currentCharacter, enemyTarget))
         {
             Types::ActionType action = currentCharacter->GetActionWhenNearEnemy();
@@ -136,7 +127,7 @@ void BattleField::StartTurn()
     HandleTurn();
 }
 
-void BattleField::HandleCombat(std::shared_ptr<Character>attacker, std::shared_ptr<Character>target)
+void BattleField::HandleCombat(std::shared_ptr<Character> attacker, std::shared_ptr<Character> target)
 {
     engine->DrawText("%s launch a attack in %s", attacker->Id, target->Id);
     // attack target
@@ -155,30 +146,46 @@ void BattleField::HandleCombat(std::shared_ptr<Character>attacker, std::shared_p
 
 void BattleField::HandleTurn()
 {
-    if (PlayerCharacter->IsDead())
+    auto it = TurnQueue.begin();
+    while (it != TurnQueue.end())
     {
-        engine->ClearCanvas();
-        engine->Stop();
-        printf("\nYOU DIED\n");
-        engine->WaitInput();
+        std::shared_ptr<Character> currentCharacter = (*it);
+        if (currentCharacter->IsDead())
+        {
+            if (currentCharacter->Id == PlayerCharacter->Id)
+            {
+                engine->ClearCanvas();
+                engine->Stop();
+                printf("\nYOU DIED\n");
+                engine->WaitInput();
+                return;
+            }
+            else
+            {
+                printf("\nEnemy slayed\n");
+                it = TurnQueue.erase(it);
+            }
+        }
+        else
+        {
+            it++;
+        }
     }
-    else if (EnemyCharacter->IsDead())
+
+    if (TurnQueue.size() == 1) // TODO for team this will need to be a find_if to check if there is some enemy in list
     {
-        printf("\nEnemy slayed\n");
-        engine->WaitInput();
         engine->ClearCanvas();
         engine->Stop();
         printf("\nYou Win, thanks for play.\n");
         engine->WaitInput();
+        return;
     }
-    else
-    {
-        printf("\n");
-        printf("#### End of turn, click on any key to start the next turn... #### \n");
-        printf("\n");
 
-        engine->WaitInput();
-    }
+    printf("\n");
+    printf("#### End of turn, click on any key to start the next turn... #### \n");
+    printf("\n");
+
+    engine->WaitInput();
 }
 
 // TODO move this to utils

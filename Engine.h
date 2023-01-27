@@ -23,6 +23,8 @@ public:
     void Draw();
     // Add actor to render queue
     void SpawnActor(std::shared_ptr<Actor> target);
+    //Destroy actor to render queue
+    void DestroyActor(std::shared_ptr<Actor> target);
     // Tells if should continue in game loop
     inline bool ShouldQuit() { return bShouldQuit; }
     // Return the world tiles size

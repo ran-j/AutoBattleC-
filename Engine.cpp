@@ -91,6 +91,14 @@ void Engine::SpawnActor(std::shared_ptr<Actor> target)
     }
 }
 
+void Engine::DestroyActor(std::shared_ptr<Actor> target)
+{
+    auto actorCurrentGrid = GetActorGrid(target);
+    actorCurrentGrid->ocupied = false;
+    Actors.erase(actorCurrentGrid->Index);
+    ActorsWorldPositions.erase(target->Id);
+}
+
 int Engine::GetActorLocation(std::shared_ptr<Actor> target)
 {
     return ActorsWorldPositions[target->Id];

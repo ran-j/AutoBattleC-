@@ -31,8 +31,7 @@ private:
 private:
 	Engine* engine;
 
-	std::shared_ptr<Character> PlayerCharacter; //TODO unique pointer
-	std::shared_ptr<Character> EnemyCharacter; //TODO unique pointer
+	std::shared_ptr<Character> PlayerCharacter;
 
 	std::map<std::shared_ptr<Character>, std::shared_ptr<Character>> CharacterAndTargets;
 	list<std::shared_ptr<Character>> TurnQueue;
