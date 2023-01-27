@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <random>
 #include <algorithm>
+#include <assert.h>
 
 using namespace std;
 
@@ -51,43 +52,46 @@ void BattleField::SetUpGame()
     int classIndex = 0;
     cin >> classIndex;
 
-    switch (classIndex)
+    if (classIndex < 1 || classIndex > 4)
     {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-        PlayerCharacter = CreateCharacter(classIndex, 100, 20, "Hero", "P");
-        engine->SpawnActor(PlayerCharacter);
-
-        CharacterAndTargets[PlayerCharacter] = CreateCharacter(GetRandomInt(1, 4), 100, 200, "Evil Man 1", "E");
-        engine->SpawnActor(CharacterAndTargets[PlayerCharacter]);
-
-        CharacterAndTargets[CharacterAndTargets[PlayerCharacter]] = PlayerCharacter;
-
-        TurnQueue.push_back(PlayerCharacter);
-        TurnQueue.push_back(CharacterAndTargets[PlayerCharacter]);
-
-        // shuffle list to prevent player or enemy always init first
-        // std::shuffle(TurnQueue.begin(), TurnQueue.end(), std::mt19937{ std::random_device{}() }); //wtf this gives me a error
-
-        break;
-    default:
+        printf("Invalid Class, try again.\n");
         SetUpGame();
-        break;
     }
+
+    PlayerCharacter = CreateCharacter(classIndex, 100, 20, "Hero", "P", "PLAYER");
+    engine->SpawnActor(PlayerCharacter);
+
+    auto enemy = CreateCharacter(GetRandomInt(1, 4), 100, 20, "Evil Man 1", "E", "CPUE");
+    engine->SpawnActor(enemy);
+
+    TurnQueue.push_back(PlayerCharacter);
+    TurnQueue.push_back(enemy);
 }
 
-std::shared_ptr<Character> BattleField::CreateCharacter(int classIndex, float health, float baseDamage, const char *id, const char *sprite)
+std::shared_ptr<Character> BattleField::CreateCharacter(int classIndex, float health, float baseDamage, const char *id, const char *sprite, const char *team)
 {
     Types::CharacterClass characterClass = (Types::CharacterClass)classIndex;
-    auto PlayerCharacter = std::make_shared<Character>(characterClass);
-    PlayerCharacter->Health = health;
-    PlayerCharacter->BaseDamage = baseDamage;
-    PlayerCharacter->DamageMultiplier = GetRandomFloat(0.2, 1.0); // TODO class influence in life and damage
-    PlayerCharacter->Id = id;
-    PlayerCharacter->Sprite = sprite;
-    return PlayerCharacter;
+    auto newCharacter = std::make_shared<Character>(characterClass);
+    newCharacter->Health = health;
+    newCharacter->BaseDamage = baseDamage;
+    newCharacter->DamageMultiplier = GetRandomFloat(0.2, 1.0); // TODO class influence in life and damage
+    newCharacter->Id = id;
+    newCharacter->Sprite = sprite;
+    newCharacter->Team = team;
+    return newCharacter;
+}
+
+std::shared_ptr<Character> BattleField::FindCharacterWithDifferentTags(const char *team)
+{
+    auto enemyInterator = find_if(TurnQueue.begin(), TurnQueue.end(), [&](const shared_ptr<Character> &otherCharacter)
+                                  { return otherCharacter->Team != team && otherCharacter->IsDead() == false; });
+
+    shared_ptr<Character> enemyTarget;
+    if (enemyInterator != TurnQueue.end())
+    {
+        enemyTarget = *enemyInterator;
+    }
+    return enemyTarget;
 }
 
 void BattleField::StartTurn()
@@ -96,12 +100,15 @@ void BattleField::StartTurn()
     for (auto it = TurnQueue.begin(); it != TurnQueue.end(); ++it)
     {
         std::shared_ptr<Character> currentCharacter = (*it);
-        std::shared_ptr<Character> enemyTarget = CharacterAndTargets[currentCharacter];
 
         if (currentCharacter->IsDead())
         {
             continue;
         }
+
+        std::shared_ptr<Character> enemyTarget = FindCharacterWithDifferentTags(currentCharacter->Team);
+
+        assert(enemyTarget!= nullptr);
 
         if (engine->IsCloseToTarget(currentCharacter, enemyTarget))
         {

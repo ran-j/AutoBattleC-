@@ -71,8 +71,6 @@ void Engine::Draw()
 
 void Engine::SpawnActor(std::shared_ptr<Actor> target)
 {
-    _ASSERT(grid);
-
     // maybe add a unique pointer ref in grids to character
 
     int random = GetRandomInt(0, GetWorldSize());

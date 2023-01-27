@@ -11,18 +11,17 @@ public:
     Character(Types::CharacterClass charcaterClass);
     ~Character();
 
-    
     float Health;
     float BaseDamage;
     float DamageMultiplier;
+    const char* Team;
 
-    bool TakeDamage(float amount);
-
+public:
     void Die();
-
-    float Attack(std::shared_ptr<Character> target);
-    Types::ActionType GetActionWhenNearEnemy();
+    bool TakeDamage(float amount);
     inline bool IsDead() { return bIsDead; }
+    Types::ActionType GetActionWhenNearEnemy();
+    float Attack(std::shared_ptr<Character> target);
 
 private:
     bool bIsDead = false;
