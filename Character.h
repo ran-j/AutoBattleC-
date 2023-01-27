@@ -50,7 +50,7 @@ public:
         {
             std::shared_ptr<Types::StatusEffect> currentEffect = (*it);
             currentEffect->duration -= 1;
-            if (currentEffect->duration <= 0)
+            if (currentEffect->duration +1 <= 0) // :) +1 to jump the current step on this turn # prevent for loss duration without apply effect 
             {
                 it = statusEffects.erase(it);
             }
@@ -71,15 +71,18 @@ public:
         statusEffects.push_back(effect);
     }
     //Get a list if exist of character effects active
-    std::list<std::shared_ptr<Types::StatusEffect> > GetEffectByAction(Types::ActionType actionType);
+    std::list<std::shared_ptr<Types::StatusEffect> > GetEffectByAction(Types::StatusEffectAction actionType);
 
 private:
     bool bIsDead = false;
     std::list<std::shared_ptr<Types::StatusEffect> > statusEffects; //turn in shared_pointer
 
+protected:
     //Check if character has any effect or condition that prevents him from moving
     bool CanMoveAndPrintMessageIfCant();
     //Check if character has any effect or condition that prevents him from attacking
     bool CanAttackAndPrintMessageIfCant();
+    //Check if character can play the current turn
+    bool CanPlayTurnAndPrintMessageIfCant();
 
 };

@@ -25,42 +25,42 @@ public:
 
     static inline std::shared_ptr<Types::StatusEffect> CreateStatusEffect(Types::StatusEffectTypes status)
     {
-        auto statusEffect = std::make_shared<Types::StatusEffect>(Types::StatusEffect{ status, 0, 0, Types::DoNothing, "Nothing?" });
+        auto statusEffect = std::make_shared<Types::StatusEffect>(Types::StatusEffect{ status, 0, 0, Types::StatusEffectAction::DoNothing, "Nothing?" });
 
         switch (status)
         {
         case Types::StatusEffectTypes::Bleed:
             statusEffect->duration = 2;
-            statusEffect->amount = 5.0f;
-            statusEffect->targetAction = Types::ActionType::Attack;
-            statusEffect->name = "Loss of blood";
+            statusEffect->amount = Utils::GetRandomFloat(2.0, 6.0);
+            statusEffect->targetAction = Types::StatusEffectAction::DamageSelf;
+            statusEffect->name = "blood loss";
             break;
 
         case Types::StatusEffectTypes::KnockBack:
             statusEffect->duration = 3;
             statusEffect->amount = 0.0f;
-            statusEffect->targetAction = Types::ActionType::Any;
-            statusEffect->name = "Knock Back";
+            statusEffect->targetAction = Types::StatusEffectAction::AnyAction;
+            statusEffect->name = "knock back";
             break;
 
         case Types::StatusEffectTypes::Cure:
             statusEffect->duration = 2;
             statusEffect->amount = 6.0f;
-            statusEffect->targetAction = Types::ActionType::Heal;
-            statusEffect->name = "Magic Cure";
+            statusEffect->targetAction = Types::StatusEffectAction::HealSelf;
+            statusEffect->name = "magic cure";
             break;
 
         case Types::StatusEffectTypes::Stun:
             statusEffect->duration = 1;
             statusEffect->amount = 0.0f;
-            statusEffect->targetAction = Types::ActionType::Move;
-            statusEffect->name = "Stun";
+            statusEffect->targetAction = Types::StatusEffectAction::AnyMove;
+            statusEffect->name = "stun";
             break;
         case Types::StatusEffectTypes::Burn:
             statusEffect->duration = 3;
-            statusEffect->amount = 0.0f;
-            statusEffect->targetAction = Types::ActionType::Any;
-            statusEffect->name = "Burning";
+            statusEffect->amount = Utils::GetRandomFloat(8.0, 10.0);
+            statusEffect->targetAction = Types::StatusEffectAction::DamageSelf;
+            statusEffect->name = "burning";
             break;
         }
 

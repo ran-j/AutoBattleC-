@@ -8,11 +8,12 @@
 using namespace std;
 Character::Character(Types::CharacterClass charcaterClass)
 {
-	statusEffects = list<std::shared_ptr<Types::StatusEffect> >();
+	statusEffects = list<std::shared_ptr<Types::StatusEffect>>();
 }
 
 Character::~Character()
 {
+	statusEffects.clear();
 }
 
 bool Character::TakeDamage(float amount)
@@ -54,13 +55,13 @@ float Character::Attack(std::shared_ptr<Character> target)
 	if (!target->IsDead())
 	{
 		// TODO a for list with all negative status that this character can apply and their chance
-		if (Utils::GetRandomBoolWithProbability(Utils::GetRandomInt(10, 40))) // from 10 to 40 to apply bleed
+		if (Utils::GetRandomBoolWithProbability(Utils::GetRandomInt(80, 90))) // from 10 to 40 to apply bleed
 		{
 			auto bleedEffect = ConstructorHelper::CreateStatusEffect(Types::Bleed);
 			Engine::DrawText("%s manage do apply %s on %s", this->Id, bleedEffect->name, target->Id);
 			target->ApplyEffect(bleedEffect);
 		}
-		else if (Utils::GetRandomBoolWithProbability(Utils::GetRandomInt(80, 90))) // from 1 to 20 to apply stun
+		else if (Utils::GetRandomBoolWithProbability(Utils::GetRandomInt(1, 20))) // from 1 to 20 to apply stun
 		{
 			auto newEffect = ConstructorHelper::CreateStatusEffect(Types::KnockBack);
 			Engine::DrawText("%s manage do apply %s on %s", this->Id, newEffect->name, target->Id);
@@ -78,11 +79,11 @@ void Character::ProcessStatusEffects()
 		std::shared_ptr<Types::StatusEffect> currentEffect = (*it);
 		switch (currentEffect->targetAction)
 		{
-		case Types::ActionType::Attack:
+		case Types::StatusEffectAction::DamageSelf:
 			TakeDamage(currentEffect->amount);
 			Engine::DrawText("%s suffered %f of damage because of %s effect", this->Id, currentEffect->amount, currentEffect->name);
 			break;
-		case Types::ActionType::Heal:
+		case Types::StatusEffectAction::HealSelf:
 			Heal(currentEffect->amount);
 			Engine::DrawText("%s heals %f percent of life because of %s effect", this->Id, currentEffect->amount, currentEffect->name);
 			break;
@@ -92,7 +93,7 @@ void Character::ProcessStatusEffects()
 
 bool Character::CanMoveAndPrintMessageIfCant()
 {
-	std::list<std::shared_ptr<Types::StatusEffect> > blockMovementEffectList = GetEffectByAction(Types::ActionType::Move);
+	std::list<std::shared_ptr<Types::StatusEffect>> blockMovementEffectList = GetEffectByAction(Types::StatusEffectAction::AnyMove);
 	if (blockMovementEffectList.size() > 0)
 	{
 		auto first = blockMovementEffectList.begin(); // for this man we can inform only one
@@ -104,7 +105,7 @@ bool Character::CanMoveAndPrintMessageIfCant()
 
 bool Character::CanAttackAndPrintMessageIfCant()
 {
-	std::list<std::shared_ptr<Types::StatusEffect> > blockMovementEffectList = GetEffectByAction(Types::ActionType::Attack);
+	std::list<std::shared_ptr<Types::StatusEffect>> blockMovementEffectList = GetEffectByAction(Types::StatusEffectAction::AnyAttack);
 	if (blockMovementEffectList.size() > 0)
 	{
 		auto first = blockMovementEffectList.begin(); // for this man we can inform only one
@@ -114,9 +115,9 @@ bool Character::CanAttackAndPrintMessageIfCant()
 	return true;
 }
 
-void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, std::function<void()> moveToTargetLocationFunc)
+bool Character::CanPlayTurnAndPrintMessageIfCant()
 {
-	std::list<std::shared_ptr<Types::StatusEffect> > blockAnyActionEffect = GetEffectByAction(Types::ActionType::Any);
+	std::list<std::shared_ptr<Types::StatusEffect>> blockAnyActionEffect = GetEffectByAction(Types::StatusEffectAction::AnyAction);
 
 	if (blockAnyActionEffect.size() > 0)
 	{
@@ -129,6 +130,35 @@ void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, s
 		}
 		effectNames = effectNames.substr(0, effectNames.length() - 2); // remove the last ", " from the effectNames string
 		Engine::DrawText("%s can't do anything because of effect(s) %s", this->Id, effectNames.c_str());
+		return false;
+	}
+	return true;
+}
+
+std::list<std::shared_ptr<Types::StatusEffect>> Character::GetEffectByAction(Types::StatusEffectAction actionType)
+{
+	auto foundedEffects = std::list<std::shared_ptr<Types::StatusEffect>>();
+	for (auto it = statusEffects.begin(); it != statusEffects.end(); ++it)
+	{
+		std::shared_ptr<Types::StatusEffect> currentEffect = (*it);
+		if (currentEffect->targetAction == actionType)
+		{
+			foundedEffects.push_back(currentEffect);
+		}
+	}
+	return foundedEffects;
+}
+
+void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, std::function<void()> moveToTargetLocationFunc)
+{
+	if (IsDead())
+	{
+		Die();
+		return;
+	}
+
+	if (!CanPlayTurnAndPrintMessageIfCant())
+	{
 		return;
 	}
 
@@ -158,23 +188,9 @@ void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, s
 	{
 		// decide if should move or use skill
 		if (CanMoveAndPrintMessageIfCant())
-		{	
+		{
 			moveToTargetLocationFunc();
 			Engine::DrawText("%s move to battle against %s", this->Id, target->Id);
 		}
 	}
-}
-
-std::list<std::shared_ptr<Types::StatusEffect> > Character::GetEffectByAction(Types::ActionType actionType)
-{
-	auto foundedEffects = std::list<std::shared_ptr<Types::StatusEffect> >();
-	for (auto it = statusEffects.begin(); it != statusEffects.end(); ++it)
-    {
-		std::shared_ptr<Types::StatusEffect> currentEffect = (*it);
-		if (currentEffect->targetAction == actionType)
-		{
-			foundedEffects.push_back(currentEffect);
-		}
-	}
-	return foundedEffects;
 }

@@ -35,7 +35,7 @@ public:
         Attack = 2,
         UseSkill = 3,
         Move = 5,
-        DoNothing = 4
+        
     };
 
     enum StatusEffectTypes
@@ -52,15 +52,25 @@ public:
         Burn = 5,
     };
 
+    enum StatusEffectAction
+    {
+        DamageSelf = 1,
+        HealSelf = 2,
+        AnyMove = 3,
+        AnyAttack = 4,
+        AnyAction = 5,
+        DoNothing = 6,
+    };
+
     struct StatusEffect
     {
         StatusEffectTypes type;
-        ActionType targetAction;
+        StatusEffectAction targetAction;
         int duration;
         float amount;
         const char * name;
 
-        StatusEffect(StatusEffectTypes effect, int duration, float amountData, ActionType action, const char * effectName)
+        StatusEffect(StatusEffectTypes effect, int duration, float amountData, StatusEffectAction action, const char * effectName)
         {
             type = effect;
             duration = duration;
