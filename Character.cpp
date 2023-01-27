@@ -8,7 +8,7 @@
 using namespace std;
 Character::Character(Types::CharacterClass charcaterClass)
 {
-	statusEffects = list<Types::StatusEffect *>();
+	statusEffects = list<std::shared_ptr<Types::StatusEffect> >();
 }
 
 Character::~Character()
@@ -75,7 +75,7 @@ void Character::ProcessStatusEffects()
 {
 	for (auto it = statusEffects.begin(); it != statusEffects.end(); ++it)
 	{
-		Types::StatusEffect *currentEffect = (*it);
+		std::shared_ptr<Types::StatusEffect> currentEffect = (*it);
 		switch (currentEffect->targetAction)
 		{
 		case Types::ActionType::Attack:
@@ -92,7 +92,7 @@ void Character::ProcessStatusEffects()
 
 bool Character::CanMoveAndPrintMessageIfCant()
 {
-	std::list<Types::StatusEffect *> blockMovementEffectList = GetEffectByAction(Types::ActionType::Move);
+	std::list<std::shared_ptr<Types::StatusEffect> > blockMovementEffectList = GetEffectByAction(Types::ActionType::Move);
 	if (blockMovementEffectList.size() > 0)
 	{
 		auto first = blockMovementEffectList.begin(); // for this man we can inform only one
@@ -104,7 +104,7 @@ bool Character::CanMoveAndPrintMessageIfCant()
 
 bool Character::CanAttackAndPrintMessageIfCant()
 {
-	std::list<Types::StatusEffect *> blockMovementEffectList = GetEffectByAction(Types::ActionType::Attack);
+	std::list<std::shared_ptr<Types::StatusEffect> > blockMovementEffectList = GetEffectByAction(Types::ActionType::Attack);
 	if (blockMovementEffectList.size() > 0)
 	{
 		auto first = blockMovementEffectList.begin(); // for this man we can inform only one
@@ -116,7 +116,7 @@ bool Character::CanAttackAndPrintMessageIfCant()
 
 void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, std::function<void()> moveToTargetLocationFunc)
 {
-	std::list<Types::StatusEffect *> blockAnyActionEffect = GetEffectByAction(Types::ActionType::Any);
+	std::list<std::shared_ptr<Types::StatusEffect> > blockAnyActionEffect = GetEffectByAction(Types::ActionType::Any);
 
 	if (blockAnyActionEffect.size() > 0)
 	{
@@ -129,6 +129,7 @@ void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, s
 		}
 		effectNames = effectNames.substr(0, effectNames.length() - 2); // remove the last ", " from the effectNames string
 		Engine::DrawText("%s can't do anything because of effect(s) %s", this->Id, effectNames.c_str());
+		return;
 	}
 
 	if (isNearTarget)
@@ -164,12 +165,12 @@ void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, s
 	}
 }
 
-std::list<Types::StatusEffect *> Character::GetEffectByAction(Types::ActionType actionType)
+std::list<std::shared_ptr<Types::StatusEffect> > Character::GetEffectByAction(Types::ActionType actionType)
 {
-	auto foundedEffects = std::list<Types::StatusEffect *>();
+	auto foundedEffects = std::list<std::shared_ptr<Types::StatusEffect> >();
 	for (auto it = statusEffects.begin(); it != statusEffects.end(); ++it)
     {
-		Types::StatusEffect *currentEffect = (*it);
+		std::shared_ptr<Types::StatusEffect> currentEffect = (*it);
 		if (currentEffect->targetAction == actionType)
 		{
 			foundedEffects.push_back(currentEffect);

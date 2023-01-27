@@ -48,16 +48,20 @@ public:
         auto it = statusEffects.begin();
         while (it != statusEffects.end())
         {
-            Types::StatusEffect *currentEffect = (*it);
-            currentEffect->amount--;
-            if (currentEffect->amount <= 0)
+            std::shared_ptr<Types::StatusEffect> currentEffect = (*it);
+            currentEffect->duration -= 1;
+            if (currentEffect->duration <= 0)
             {
                 it = statusEffects.erase(it);
+            }
+            else
+            {
+                it++;
             }
         }
     }  
     // Apply effect on this character
-    inline void ApplyEffect(Types::StatusEffect *effect)
+    inline void ApplyEffect(std::shared_ptr<Types::StatusEffect> effect)
     {
         if (IsDead())
         {
@@ -67,11 +71,11 @@ public:
         statusEffects.push_back(effect);
     }
     //Get a list if exist of character effects active
-    std::list<Types::StatusEffect *> GetEffectByAction(Types::ActionType actionType);
+    std::list<std::shared_ptr<Types::StatusEffect> > GetEffectByAction(Types::ActionType actionType);
 
 private:
     bool bIsDead = false;
-    std::list<Types::StatusEffect *> statusEffects; //turn in shared_pointer
+    std::list<std::shared_ptr<Types::StatusEffect> > statusEffects; //turn in shared_pointer
 
     //Check if character has any effect or condition that prevents him from moving
     bool CanMoveAndPrintMessageIfCant();

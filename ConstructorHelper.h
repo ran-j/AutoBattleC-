@@ -23,9 +23,9 @@ public:
         return newCharacter;
     };
 
-    static inline Types::StatusEffect *CreateStatusEffect(Types::StatusEffectTypes status)
+    static inline std::shared_ptr<Types::StatusEffect> CreateStatusEffect(Types::StatusEffectTypes status)
     {
-        Types::StatusEffect *statusEffect = new Types::StatusEffect(status, 0, 0, Types::DoNothing, "Nothing?");
+        auto statusEffect = std::make_shared<Types::StatusEffect>(Types::StatusEffect{ status, 0, 0, Types::DoNothing, "Nothing?" });
 
         switch (status)
         {
