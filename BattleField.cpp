@@ -128,6 +128,8 @@ void BattleField::StartTurn()
         currentCharacter->PlayTurn(isEnemyNear, enemyTarget, [&]() { 
             engine->MoveActorToTarget(currentCharacter, enemyTarget);
         });
+
+        Engine::DrawText(" ");
     }
 
     currentTurn++;

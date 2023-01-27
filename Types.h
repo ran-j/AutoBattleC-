@@ -20,7 +20,7 @@ public:
         }
     };
 
-    enum CharacterClass
+    enum CharacterClassType
     {
         Paladin = 1,
         Warrior = 2,
@@ -78,6 +78,25 @@ public:
             targetAction = action;
             name = effectName;
         }
+    };
+
+    struct CharacterClass
+    {
+        CharacterClassType type;
+        float Health;
+        float BaseDamage;
+        float DamageMultiplier;
+
+        const char * AttackMessage;
+        const char * OnMissAttackMessage;
+        const char * OnMDodgeMessage;
+        const char * OnKillEnemyMessage;
+        const char * OnGetDamageMessage;
+        const char * OnDyingMessage;
+        const char * OnWinMessage;
+        const char * OnCantMoveEffectMessage;
+        const char * OnCantAttackEffectMessage;
+        //const char * OnUseSkillMessage; TODO
     };
 
 };

@@ -6,7 +6,7 @@
 #include <string>
 
 using namespace std;
-Character::Character(Types::CharacterClass charcaterClass)
+Character::Character(Types::CharacterClassType charcaterClass)
 {
 	statusEffects = list<std::shared_ptr<Types::StatusEffect>>();
 }

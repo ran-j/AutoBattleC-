@@ -10,7 +10,7 @@
 class Character : public Actor
 {
 public:
-    Character(Types::CharacterClass charcaterClass);
+    Character(Types::CharacterClassType charcaterClass);
     ~Character();
 
     float Health;

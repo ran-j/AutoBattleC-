@@ -11,8 +11,10 @@ class ConstructorHelper
 public:
     static inline std::shared_ptr<Character> CreateCharacter(int classIndex, float health, float baseDamage, const char *id, const char *sprite, const char *team)
     {
-        Types::CharacterClass characterClass = (Types::CharacterClass)classIndex;
-        auto newCharacter = std::make_shared<Character>(characterClass);
+        Types::CharacterClassType CharacterClassType = (Types::CharacterClassType)classIndex;
+
+        
+        auto newCharacter = std::make_shared<Character>(CharacterClassType);
         newCharacter->MaxHealth = health;
         newCharacter->Health = health;
         newCharacter->BaseDamage = baseDamage;
@@ -22,6 +24,28 @@ public:
         newCharacter->Team = team;
         return newCharacter;
     };
+
+    static inline Types::CharacterClass GetCharacterClass(Types::CharacterClassType characterClassType)
+    {
+        switch (characterClassType)
+        {
+        case Types::CharacterClassType::Paladin:
+            //TODO
+            break;
+        case Types::CharacterClassType::Warrior:
+            //TODO
+            break;
+        case Types::CharacterClassType::Cleric:
+            //TODO
+            break;
+        case Types::CharacterClassType::Archer:
+            //TODO
+            break;
+
+        default:
+            break;
+        }
+    }
 
     static inline std::shared_ptr<Types::StatusEffect> CreateStatusEffect(Types::StatusEffectTypes status)
     {
