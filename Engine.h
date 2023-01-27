@@ -53,10 +53,12 @@ public:
 #endif
         printf("\n");
     };
-
+ 
 private:
-    // Set Actor Index
+    //Set Actor Index
     void SetActorIndex(std::shared_ptr<Actor> target, int index);
+    //Get direction base on index
+    int GetMoveDirection(int xIndex1, int yIndex1, int xIndex2, int yIndex2, int gridIndex);
 
 private:
     // list to actor to be draw

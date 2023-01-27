@@ -19,11 +19,11 @@ void Engine::Init(int lines, int Columns)
 
 void Engine::ClearCanvas()
 {
-    #ifdef __linux__ 
-        system("clear");
-    #elif _WIN32
-        system("cls");
-    #endif     
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
+    system("cls");
+#endif
 }
 
 void Engine::Draw()
@@ -111,78 +111,49 @@ std::vector<Types::GridBox>::iterator Engine::GetActorGrid(std::shared_ptr<Actor
     return targetCurrentGrid;
 }
 
-// TODO this can be better
 void Engine::MoveActorToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<Actor> target)
 {
     int gridSize = GetWorldSize();
     auto actorCurrentGrid = GetActorGrid(actor);
     auto targetCurrentGrid = GetActorGrid(target);
 
-    if (actorCurrentGrid->xIndex < targetCurrentGrid->xIndex) // Move right
+    int newIndex = GetMoveDirection(actorCurrentGrid->xIndex, actorCurrentGrid->yIndex, targetCurrentGrid->xIndex, targetCurrentGrid->yIndex, actorCurrentGrid->Index);
+
+    if (newIndex >= 0 && newIndex < gridSize)
     {
-        int newIndex = actorCurrentGrid->Index + 1;
-        if (newIndex >= 0 && newIndex < gridSize)
-        {
-            // leave the current grid
-            actorCurrentGrid->ocupied = false;
-            // Update locations maps
-            SetActorIndex(actor, newIndex);
-            // enter in grid
-            grid->grids[newIndex].ocupied = true;
-            // notify that has changes in grid
-            bHasChanges = true;
-            return;
-        }
+        // leave the current grid
+        actorCurrentGrid->ocupied = false;
+        // Update locations maps
+        SetActorIndex(actor, newIndex);
+        // enter in grid
+        grid->grids[newIndex].ocupied = true;
+        // notify that has changes in grid
+        bHasChanges = true;
+        return;
     }
-    else if (actorCurrentGrid->xIndex > targetCurrentGrid->xIndex) // Move left
+}
+
+int Engine::GetMoveDirection(int xIndex, int yIndex1, int xIndex2, int yIndex2, int gridIndex)
+{
+    if (xIndex < xIndex2) // Move right
     {
-        int newIndex = actorCurrentGrid->Index - 1;
-        if (newIndex >= 0 && newIndex < gridSize)
-        {
-            // leave the current grid
-            actorCurrentGrid->ocupied = false;
-            // Update locations maps
-            SetActorIndex(actor, newIndex);
-            // enter in grid
-            grid->grids[newIndex].ocupied = true;
-            // notify that has changes in grid
-            bHasChanges = true;
-            return;
-        }
+        return gridIndex + 1;
+    }
+    else if (xIndex > xIndex2) // Move left
+    {
+        return gridIndex - 1;
     }
 
-    if (actorCurrentGrid->yIndex < targetCurrentGrid->yIndex) // Move up
+    if (yIndex1 < yIndex2) // Move up
     {
-        int newIndex = actorCurrentGrid->Index - mLines;
-        if (newIndex >= 0 && newIndex < gridSize)
-        {
-            // leave the current grid
-            actorCurrentGrid->ocupied = false;
-            // Update locations maps
-            SetActorIndex(actor, newIndex);
-            // enter in grid
-            grid->grids[newIndex].ocupied = true;
-            // notify that has changes in grid
-            bHasChanges = true;
-            return;
-        }
+        return gridIndex - mLines;
     }
-    else if (actorCurrentGrid->yIndex > targetCurrentGrid->yIndex) // move down
+    else if (yIndex1 > yIndex2) // move down
     {
-        int newIndex = actorCurrentGrid->Index + mLines;
-        if (newIndex >= 0 && newIndex < gridSize)
-        {
-            // leave the current grid
-            actorCurrentGrid->ocupied = false;
-            // Update locations maps
-            SetActorIndex(actor, newIndex);
-            // enter in grid
-            grid->grids[newIndex].ocupied = true;
-            // notify that has changes in grid
-            bHasChanges = true;
-            return;
-        }
+        return gridIndex + mLines;
     }
+
+    return -1;
 }
 
 void Engine::SetActorIndex(std::shared_ptr<Actor> target, int index)
@@ -191,18 +162,18 @@ void Engine::SetActorIndex(std::shared_ptr<Actor> target, int index)
     ActorsWorldPositions[target->Id] = index;
 }
 
-bool Engine::IsCloseToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<Actor>target)
+bool Engine::IsCloseToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<Actor> target)
 {
     auto actorCurrentGrid = GetActorGrid(actor);
     auto targetCurrentGrid = GetActorGrid(target);
-   
+
     double dist = Utils::DistanceTo(actorCurrentGrid->xIndex, actorCurrentGrid->yIndex, targetCurrentGrid->xIndex, targetCurrentGrid->yIndex);
     double oneTileDistance = 1;
-     
+
     return dist <= oneTileDistance;
 }
 
-void Engine::DrawText(const char* format, ...) 
+void Engine::DrawText(const char *format, ...)
 {
     va_list args;
     va_start(args, format);
@@ -210,7 +181,7 @@ void Engine::DrawText(const char* format, ...)
     printf("\n");
     va_end(args);
 
-    //wait input to proceed
+    // wait input to proceed
     WaitInput();
     bHasChanges = true;
 }
