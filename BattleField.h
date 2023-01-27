@@ -24,6 +24,7 @@ private:
 
 	std::shared_ptr<Character> CreateCharacter(int classIndex, float health, float baseDamage, const char* id, const char* sprite, const char *team);
 	std::shared_ptr<Character> FindCharacterWithDifferentTags(const char *team);
+	std::shared_ptr<Character> FindCharacterWithSameTags(const char *team);
 	
 	void HandleCombat(std::shared_ptr<Character> attacker, std::shared_ptr<Character> target);
 	

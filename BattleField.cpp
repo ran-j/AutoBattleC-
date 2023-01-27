@@ -82,13 +82,26 @@ std::shared_ptr<Character> BattleField::CreateCharacter(int classIndex, float he
 
 std::shared_ptr<Character> BattleField::FindCharacterWithDifferentTags(const char *team)
 {
-    auto enemyInterator = find_if(TurnQueue.begin(), TurnQueue.end(), [&](const shared_ptr<Character> &otherCharacter)
+    auto targetInterator = find_if(TurnQueue.begin(), TurnQueue.end(), [&](const shared_ptr<Character> &otherCharacter)
                                   { return otherCharacter->Team != team && otherCharacter->IsDead() == false; });
 
-    shared_ptr<Character> enemyTarget;
-    if (enemyInterator != TurnQueue.end())
+    shared_ptr<Character> foundTarget;
+    if (targetInterator != TurnQueue.end())
     {
-        enemyTarget = *enemyInterator;
+        foundTarget = *targetInterator;
+    }
+    return foundTarget;
+}
+
+std::shared_ptr<Character> BattleField::FindCharacterWithSameTags(const char *team)
+{
+    auto targetInterator = find_if(TurnQueue.begin(), TurnQueue.end(), [&](const shared_ptr<Character> &otherCharacter)
+                                  { return otherCharacter->Team == team && otherCharacter->IsDead() == false; });
+
+    shared_ptr<Character> enemyTarget;
+    if (targetInterator != TurnQueue.end())
+    {
+        enemyTarget = *targetInterator;
     }
     return enemyTarget;
 }
@@ -178,7 +191,7 @@ void BattleField::HandleTurn()
         }
     }
 
-    if (TurnQueue.size() == 1) // TODO for team this will need to be a find_if to check if there is some enemy in list
+    if (!FindCharacterWithDifferentTags(PlayerCharacter->Team))
     {
         engine->ClearCanvas();
         engine->Stop();
