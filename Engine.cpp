@@ -118,12 +118,9 @@ void Engine::MoveActorToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<Act
     auto actorCurrentGrid = GetActorGrid(actor);
     auto targetCurrentGrid = GetActorGrid(target);
 
-    auto searchActorInGrids = std::find_if(grid->grids.begin(), grid->grids.end(), [&](const Types::GridBox &box)
-                                           { return box.Index == actorCurrentGrid->Index - 1; });
-
-    if (searchActorInGrids != grid->grids.end()) // Move left
+    if (actorCurrentGrid->xIndex < targetCurrentGrid->xIndex) // Move right
     {
-        int newIndex = actorCurrentGrid->Index - 1;
+        int newIndex = actorCurrentGrid->Index + 1;
         if (newIndex >= 0 && newIndex < gridSize)
         {
             // leave the current grid
@@ -137,9 +134,9 @@ void Engine::MoveActorToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<Act
             return;
         }
     }
-    else if (actorCurrentGrid->xIndex < targetCurrentGrid->xIndex) // Move right
+    else if (actorCurrentGrid->xIndex > targetCurrentGrid->xIndex) // Move left
     {
-        int newIndex = actorCurrentGrid->Index + 1;
+        int newIndex = actorCurrentGrid->Index - 1;
         if (newIndex >= 0 && newIndex < gridSize)
         {
             // leave the current grid
@@ -170,7 +167,7 @@ void Engine::MoveActorToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<Act
             return;
         }
     }
-    else if (actorCurrentGrid->yIndex < targetCurrentGrid->yIndex) // move  down
+    else if (actorCurrentGrid->yIndex > targetCurrentGrid->yIndex) // move down
     {
         int newIndex = actorCurrentGrid->Index + mLines;
         if (newIndex >= 0 && newIndex < gridSize)
