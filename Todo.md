@@ -11,6 +11,8 @@
 - [x] The game should inform who was victorious
 - [x] The battlefield should only be reprinted/redrawn if there have been any visual changes to it
 - [x] Only one character is allowed per tile
+- [ ] Implement a "Status Effect"
+- [ ] Implement a "Special Ability" that can be randomly performed.
 
 ### Extra Features
 
