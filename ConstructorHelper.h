@@ -44,6 +44,8 @@ public:
             characterClass.OnWinMessage = "Victory is mine, but the fight for justice continues. I will remain vigilant and continue to serve in the name of righteousness.";
             characterClass.OnCantMoveEffectMessage = "I may be immobile, but my faith in my god will guide my allies to victory.";
             characterClass.OnCantAttackEffectMessage = "I am stunned and unable to attack, my faith in my deity is the only thing that keeps me going.";
+
+            characterClass.AttackActMessage = "%s attacks with holy power against %s!"; 
             break;
         case Types::CharacterClassType::Warrior:
             characterClass.Health = 130;
@@ -58,6 +60,8 @@ public:
             characterClass.OnWinMessage = "Victory is mine, but the battle never ends. I will continue to hone my combat skills and be ready for the next fight.";
             characterClass.OnCantMoveEffectMessage = "I may be down, but I am not out. My determination will see me through this.";
             characterClass.OnCantAttackEffectMessage = "I am stunned and unable to defend myself.";
+
+            characterClass.AttackActMessage = "%s charges towards %s!";
             break;
         case Types::CharacterClassType::Cleric:
             characterClass.Health = 85;
@@ -73,6 +77,8 @@ public:
             characterClass.OnCantMoveEffectMessage = "My body may be incapacitated, but my spirit remains strong.";
             characterClass.OnCantAttackEffectMessage = "I am stunned and unable to cast spells, I pray for a swift recovery.";
 
+            characterClass.AttackActMessage = "%s casts a spell on %s!";
+
             break;
         case Types::CharacterClassType::Archer:
             characterClass.Health = 100;
@@ -87,7 +93,7 @@ public:
             characterClass.OnWinMessage = "Victory is mine, but the battle never ends. I will continue to hone my archery skills and be ready for the next fight.";
             characterClass.OnCantMoveEffectMessage = "I may be grounded, but I still have my bow. I will rain arrows upon our enemies from here.";
             characterClass.OnCantAttackEffectMessage = "I am stunned and unable to attack.";
-
+            characterClass.AttackActMessage = "%s shoots an arrow at %s!";
             break;
 
         default:

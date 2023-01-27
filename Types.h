@@ -87,6 +87,8 @@ public:
         float BaseDamage;
         float DamageMultiplier;
 
+        const char * AttackActMessage;
+
         const char * AttackMessage;
         const char * OnMissAttackMessage;
         const char * OnMDodgeMessage;
