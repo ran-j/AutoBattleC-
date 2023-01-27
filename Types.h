@@ -30,9 +30,44 @@ public:
 
     enum ActionType
     {
+        Any = 0,
         Heal = 1,
         Attack = 2,
         UseSkill = 3,
+        Move = 5,
+        DoNothing = 4
+    };
+
+    enum StatusEffectTypes
+    {
+        //Lose health over 2 turns
+        Bleed = 1,
+        //Can't do nothing for 3 turns
+        KnockBack = 2,
+        //Heal over 2 turns
+        Cure = 3,
+        //Can't do nothing for one turn
+        Stun = 4,
+        //Lose health by burn over 3 turns
+        Burn = 5,
+    };
+
+    struct StatusEffect
+    {
+        StatusEffectTypes type;
+        ActionType targetAction;
+        int duration;
+        float amount;
+        const char * name;
+
+        StatusEffect(StatusEffectTypes effect, int duration, float amountData, ActionType action, const char * effectName)
+        {
+            type = effect;
+            duration = duration;
+            amount = amountData;
+            targetAction = action;
+            name = effectName;
+        }
     };
 
 };

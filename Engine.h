@@ -40,7 +40,7 @@ public:
     // Clear user viewport
     void ClearCanvas();
     // Draw user text on viewport
-    void DrawText(const char *format, ...);
+    void DrawText(const char *format, ...); //TODO make static in line
     // Tells engine to stop render
     inline void Stop() { bShouldQuit = true; };
     //Wait to user input

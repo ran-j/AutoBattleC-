@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "Engine.h"
 #include "Utils.h"
+#include "ConstructorHelper.h"
 
 #include <iostream>
 #include <list>
@@ -57,35 +58,22 @@ void BattleField::SetUpGame()
         SetUpGame();
     }
 
-    PlayerCharacter = CreateCharacter(classIndex, 100, 20, "Hero", "P", "HEROES");
+    PlayerCharacter = ConstructorHelper::CreateCharacter(classIndex, 100, 20, "Hero", "P", "HEROES");
     engine->SpawnActor(PlayerCharacter);
 
-    auto assistant = CreateCharacter(Utils::GetRandomInt(1, 4), 50, 20, "Hero assistant", "A", "HEROES");
+    auto assistant = ConstructorHelper::CreateCharacter(Utils::GetRandomInt(1, 4), 50, 20, "Hero assistant", "A", "HEROES");
     engine->SpawnActor(assistant);
 
-    auto enemy1 = CreateCharacter(Utils::GetRandomInt(1, 4), 100, 20, "Evil Man 1", "E", "CPUE");
+    auto enemy1 = ConstructorHelper::CreateCharacter(Utils::GetRandomInt(1, 4), 100, 20, "Evil Man 1", "E", "CPUE");
     engine->SpawnActor(enemy1);
 
-    auto enemy2 = CreateCharacter(Utils::GetRandomInt(1, 4), 90, 20, "Evil Man 2", "E", "CPUE");
+    auto enemy2 = ConstructorHelper::CreateCharacter(Utils::GetRandomInt(1, 4), 90, 20, "Evil Man 2", "E", "CPUE");
     engine->SpawnActor(enemy2);
 
     TurnQueue.push_back(PlayerCharacter);
     TurnQueue.push_back(enemy1);
     TurnQueue.push_back(enemy2);
     TurnQueue.push_back(assistant);
-}
-
-std::shared_ptr<Character> BattleField::CreateCharacter(int classIndex, float health, float baseDamage, const char *id, const char *sprite, const char *team)
-{
-    Types::CharacterClass characterClass = (Types::CharacterClass)classIndex;
-    auto newCharacter = std::make_shared<Character>(characterClass);
-    newCharacter->Health = health;
-    newCharacter->BaseDamage = baseDamage;
-    newCharacter->DamageMultiplier = Utils::GetRandomFloat(0.2, 1.0); // TODO class influence in life and damage
-    newCharacter->Id = id;
-    newCharacter->Sprite = sprite;
-    newCharacter->Team = team;
-    return newCharacter;
 }
 
 std::shared_ptr<Character> BattleField::FindCharacterWithDifferentTags(const char *team)
@@ -116,16 +104,22 @@ std::shared_ptr<Character> BattleField::FindCharacterWithSameTags(const char *te
 
 void BattleField::StartTurn()
 {
-    printf("\nLogs: \n");
+    printf("\nLogs:\n");
     for (auto it = TurnQueue.begin(); it != TurnQueue.end(); ++it)
     {
         std::shared_ptr<Character> currentCharacter = (*it);
+        
+        std::list<const char *> textEffects = currentCharacter->ProcessStatusEffects();
+
+        for (auto text : textEffects) {
+            engine->DrawText(text); 
+        } 
 
         if (currentCharacter->IsDead())
         {
             continue;
         }
-
+       
         std::shared_ptr<Character> enemyTarget = FindCharacterWithDifferentTags(currentCharacter->Team);
 
         if (enemyTarget == nullptr)
@@ -133,12 +127,18 @@ void BattleField::StartTurn()
             continue;
         }
 
+        //TODO maybe this should be in actor class called PlayTurn(bool isNearTarget, Character* target) function
         if (engine->IsCloseToTarget(currentCharacter, enemyTarget))
         {
             Types::ActionType action = currentCharacter->GetActionWhenNearEnemy();
             switch (action)
             {
             case Types::ActionType::Attack:
+                if (!currentCharacter->CanMove())
+                {
+                    engine->DrawText("%s can't attack.", currentCharacter->Id);
+                    continue;
+                }
                 HandleCombat(currentCharacter, enemyTarget);
                 break;
             default:
@@ -148,6 +148,12 @@ void BattleField::StartTurn()
         }
         else
         {
+            if (!currentCharacter->CanMove())
+            {
+                engine->DrawText("%s can't move.", currentCharacter->Id);
+                continue;
+            }
+
             engine->MoveActorToTarget(currentCharacter, enemyTarget);
             engine->DrawText("%s move one tile", currentCharacter->Id);
         }
@@ -193,12 +199,13 @@ void BattleField::HandleTurn()
             else
             {
                 engine->DestroyActor(currentCharacter);
-                printf("\nEnemy slayed\n");
+                printf("\nEnemy %s slayed\n", currentCharacter->Id);
                 it = TurnQueue.erase(it);
             }
         }
         else
         {
+            currentCharacter->DecreaseStatusEffects();
             it++;
         }
     }
