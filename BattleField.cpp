@@ -3,11 +3,10 @@
 #include "Types.h"
 #include "Character.h"
 #include "Engine.h"
+#include "Utils.h"
 
 #include <iostream>
 #include <list>
-#include <string>
-#include <cstdlib>
 #include <random>
 #include <algorithm>
 #include <assert.h>
@@ -61,7 +60,7 @@ void BattleField::SetUpGame()
     PlayerCharacter = CreateCharacter(classIndex, 100, 20, "Hero", "P", "PLAYER");
     engine->SpawnActor(PlayerCharacter);
 
-    auto enemy = CreateCharacter(GetRandomInt(1, 4), 100, 20, "Evil Man 1", "E", "CPUE");
+    auto enemy = CreateCharacter(Utils::GetRandomInt(1, 4), 100, 20, "Evil Man 1", "E", "CPUE");
     engine->SpawnActor(enemy);
 
     TurnQueue.push_back(PlayerCharacter);
@@ -74,7 +73,7 @@ std::shared_ptr<Character> BattleField::CreateCharacter(int classIndex, float he
     auto newCharacter = std::make_shared<Character>(characterClass);
     newCharacter->Health = health;
     newCharacter->BaseDamage = baseDamage;
-    newCharacter->DamageMultiplier = GetRandomFloat(0.2, 1.0); // TODO class influence in life and damage
+    newCharacter->DamageMultiplier = Utils::GetRandomFloat(0.2, 1.0); // TODO class influence in life and damage
     newCharacter->Id = id;
     newCharacter->Sprite = sprite;
     newCharacter->Team = team;
@@ -193,17 +192,4 @@ void BattleField::HandleTurn()
     printf("\n");
 
     engine->WaitInput();
-}
-
-// TODO move this to utils
-int BattleField::GetRandomInt(int min, int max)
-{
-    int range = max - min + 1;
-    return rand() % range + min;
-}
-
-// TODO move this to utils
-float BattleField::GetRandomFloat(float min, float max)
-{
-    return max + (rand() / (RAND_MAX / (min - max)));
 }

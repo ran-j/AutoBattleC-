@@ -24,10 +24,7 @@ private:
 
 	std::shared_ptr<Character> CreateCharacter(int classIndex, float health, float baseDamage, const char* id, const char* sprite, const char *team);
 	std::shared_ptr<Character> FindCharacterWithDifferentTags(const char *team);
-
-	int GetRandomInt(int min, int max);
-	float GetRandomFloat(float min, float max);
-
+	
 	void HandleCombat(std::shared_ptr<Character> attacker, std::shared_ptr<Character> target);
 	
 private:

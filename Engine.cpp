@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Actor.h"
+#include "Utils.h"
 
 #include <stdarg.h>
 
@@ -73,7 +74,7 @@ void Engine::SpawnActor(std::shared_ptr<Actor> target)
 {
     // maybe add a unique pointer ref in grids to character
 
-    int random = GetRandomInt(0, GetWorldSize());
+    int random = Utils::GetRandomInt(0, GetWorldSize());
     auto l_front = grid->grids.begin();
     advance(l_front, random);
 
@@ -198,7 +199,7 @@ bool Engine::IsCloseToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<Actor
     auto actorCurrentGrid = GetActorGrid(actor);
     auto targetCurrentGrid = GetActorGrid(target);
    
-    double dist = DistanceTo(actorCurrentGrid->xIndex, actorCurrentGrid->yIndex, targetCurrentGrid->xIndex, targetCurrentGrid->yIndex);
+    double dist = Utils::DistanceTo(actorCurrentGrid->xIndex, actorCurrentGrid->yIndex, targetCurrentGrid->xIndex, targetCurrentGrid->yIndex);
     double oneTileDistance = 1;
      
     return dist <= oneTileDistance;
@@ -215,18 +216,4 @@ void Engine::DrawText(const char* format, ...)
     //wait input to proceed
     WaitInput();
     bHasChanges = true;
-}
-
-// TODO move this to utils
-int Engine::GetRandomInt(int min, int max)
-{
-    int range = max - min + 1;
-    return rand() % range + min;
-}
-
-// TODO move this to utils
-double Engine::DistanceTo(double x1, double y1, double x2, double y2)
-{
-    //https://www.wikihow.com/Find-the-Distance-Between-Two-Points
-    return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }

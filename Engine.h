@@ -54,9 +54,6 @@ public:
         printf("\n");
     };
 
-    int GetRandomInt(int min, int max);
-    double DistanceTo(double x1, double y1, double x2, double y2);
-
 private:
     // Set Actor Index
     void SetActorIndex(std::shared_ptr<Actor> target, int index);
