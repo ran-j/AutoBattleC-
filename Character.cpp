@@ -24,7 +24,7 @@ bool Character::TakeDamage(float amount)
 
 void Character::Die() 
 {
-	printf("aaaaaaaaa, I got killed \n");
+	printf("%s : aaaaaaaaa, I got killed \n", Id);
 }
 
 float Character::Attack(std::shared_ptr<Character> target) 

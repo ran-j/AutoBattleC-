@@ -1,7 +1,7 @@
 - [x] Ask the player to pick a class.
 - [x] Ask the battlefield size.
 - [x] The enemy character must be randomly chosen.
-- [x] Both characters must be randomly assigned a tile in the battlefield.
+- [ ] Both characters must be randomly assigned a tile in the battlefield.
 - [x] Take turns to try to kill their opponent.
     - [x] Each character should only perform one action per turn
     - [x] If they are within range of a target, they must attack. Otherwise, they will move toward the nearest target

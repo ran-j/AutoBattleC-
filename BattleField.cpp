@@ -57,14 +57,22 @@ void BattleField::SetUpGame()
         SetUpGame();
     }
 
-    PlayerCharacter = CreateCharacter(classIndex, 100, 20, "Hero", "P", "PLAYER");
+    PlayerCharacter = CreateCharacter(classIndex, 100, 20, "Hero", "P", "HEROES");
     engine->SpawnActor(PlayerCharacter);
 
-    auto enemy = CreateCharacter(Utils::GetRandomInt(1, 4), 100, 20, "Evil Man 1", "E", "CPUE");
-    engine->SpawnActor(enemy);
+    auto assistant = CreateCharacter(Utils::GetRandomInt(1, 4), 50, 20, "Hero assistant", "A", "HEROES");
+    engine->SpawnActor(assistant);
+
+    auto enemy1 = CreateCharacter(Utils::GetRandomInt(1, 4), 100, 20, "Evil Man 1", "E", "CPUE");
+    engine->SpawnActor(enemy1);
+
+    auto enemy2 = CreateCharacter(Utils::GetRandomInt(1, 4), 90, 20, "Evil Man 2", "E", "CPUE");
+    engine->SpawnActor(enemy2);
 
     TurnQueue.push_back(PlayerCharacter);
-    TurnQueue.push_back(enemy);
+    TurnQueue.push_back(enemy1);
+    TurnQueue.push_back(enemy2);
+    TurnQueue.push_back(assistant);
 }
 
 std::shared_ptr<Character> BattleField::CreateCharacter(int classIndex, float health, float baseDamage, const char *id, const char *sprite, const char *team)
@@ -120,7 +128,10 @@ void BattleField::StartTurn()
 
         std::shared_ptr<Character> enemyTarget = FindCharacterWithDifferentTags(currentCharacter->Team);
 
-        assert(enemyTarget!= nullptr);
+        if (enemyTarget == nullptr)
+        {
+            continue;
+        }
 
         if (engine->IsCloseToTarget(currentCharacter, enemyTarget))
         {
@@ -181,6 +192,7 @@ void BattleField::HandleTurn()
             }
             else
             {
+                engine->DestroyActor(currentCharacter);
                 printf("\nEnemy slayed\n");
                 it = TurnQueue.erase(it);
             }

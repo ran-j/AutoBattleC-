@@ -96,6 +96,7 @@ void Engine::DestroyActor(std::shared_ptr<Actor> target)
     actorCurrentGrid->ocupied = false;
     Actors.erase(actorCurrentGrid->Index);
     ActorsWorldPositions.erase(target->Id);
+    bHasChanges = true;
 }
 
 int Engine::GetActorLocation(std::shared_ptr<Actor> target)
