@@ -148,7 +148,6 @@ void BattleField::HandleTurn()
             {
                 Engine::DrawText("\nYOU DIED\n");
                 Engine::WaitInput();
-                engine->ClearCanvas();
                 engine->Stop();
                 return;
             }
@@ -171,7 +170,6 @@ void BattleField::HandleTurn()
     {
         Engine::DrawText("\nYou Win, thanks for play.\n");
         PlayerCharacter->WinGame();
-        engine->ClearCanvas();
         engine->Stop();
         Engine::WaitInput();
         return;
