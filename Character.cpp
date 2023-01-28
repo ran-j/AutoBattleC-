@@ -210,7 +210,6 @@ void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, s
 	}
 	else
 	{
-		// decide if should move or use skill
 		if (CanMoveAndPrintMessageIfCant())
 		{
 			moveToTargetLocationFunc();
