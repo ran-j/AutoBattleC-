@@ -1,6 +1,10 @@
 #include "Engine.h"
 #include "Actor.h"
 #include "Utils.h"
+
+#include <algorithm>
+#include <list>
+#include <random>
  
 Engine::Engine()
 {
@@ -70,14 +74,15 @@ void Engine::Draw()
 
 void Engine::SpawnActor(std::shared_ptr<Actor> target)
 {
-    int random = Utils::GetRandomInt(0, GetWorldSize());
-    auto l_front = grid->grids.begin();
-    advance(l_front, random);
+    //get a random position in the grid
+    std::random_device rd;
+    std::mt19937 g(rd());
+    auto possibleGrid = std::next(grid->grids.begin(), std::uniform_int_distribution<int>(0, grid->grids.size()-1)(g));
 
-    if (!l_front->ocupied)
+    if (!possibleGrid->ocupied)
     {
-        l_front->ocupied = true;
-        SetActorIndex(target, l_front->Index);
+        possibleGrid->ocupied = true;
+        SetActorIndex(target, possibleGrid->Index);
         bHasChanges = true;
     }
     else
