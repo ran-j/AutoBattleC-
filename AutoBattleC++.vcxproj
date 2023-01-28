@@ -146,6 +146,7 @@
     <ClCompile Include="Types.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="WorldMatrix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BattleField.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="ConstructorHelper.h" />
+    <ClInclude Include="WorldMatrix.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

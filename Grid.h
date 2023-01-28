@@ -16,5 +16,6 @@ private:
     std::vector<Types::GridBox> grids;
 private:
     friend class Engine;
+    friend class WorldMatrix;
 };
 

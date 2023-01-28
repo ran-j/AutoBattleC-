@@ -26,4 +26,4 @@
     - "Teleport": Teleports the character to any tile
     - "Invisibility": Makes the character "hidden", stopping enemies from chasing or attacking
     - "Throw rock": Character can damage a target from far away
-- Instead of only 2 characters, the game must have two opposing teams. The player can still pick their character's class. When a team is completely wiped out, they 
+- Instead of only 2 characters, the game must have two opposing teams. The player can still pick their character's class. When a team is completely wiped out, they win

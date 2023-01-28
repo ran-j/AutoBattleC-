@@ -35,7 +35,7 @@ public:
     //Attack other character
     float Attack(std::shared_ptr<Character> target);
     //Do action in one turn
-    void PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, std::function<void()> moveToTargetLocationFunc);
+    void PlayTurn(std::shared_ptr<Character> target);
 
 public:
     // Applies negative and positive status effects like heal or bleed

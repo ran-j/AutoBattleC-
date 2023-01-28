@@ -124,10 +124,8 @@ void BattleField::StartTurn()
         {
             continue;
         }
-        bool isEnemyNear = engine->IsCloseToTarget(currentCharacter, enemyTarget);
-        currentCharacter->PlayTurn(isEnemyNear, enemyTarget, [&]() { 
-            engine->MoveActorToTarget(currentCharacter, enemyTarget);
-        });
+         
+        currentCharacter->PlayTurn(enemyTarget);
 
         Engine::DrawText(" \t ");
     }
@@ -171,10 +169,10 @@ void BattleField::HandleTurn()
 
     if (!FindCharacterWithDifferentTags(PlayerCharacter->Team))
     {
+        Engine::DrawText("\nYou Win, thanks for play.\n");
+        PlayerCharacter->WinGame();
         engine->ClearCanvas();
         engine->Stop();
-        PlayerCharacter->WinGame();
-        Engine::DrawText("\nYou Win, thanks for play.\n");
         Engine::WaitInput();
         return;
     }

@@ -168,7 +168,7 @@ public:
             statusEffect->duration = 3;
             statusEffect->amount = 0.0f;
             statusEffect->targetAction = Types::StatusEffectAction::AnyAction;
-            statusEffect->name = "knock back";
+            statusEffect->name = "knock down";
             break;
 
         case Types::StatusEffectTypes::Cure:

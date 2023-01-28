@@ -67,7 +67,6 @@ float Character::Attack(std::shared_ptr<Character> target)
 				Engine::DrawText("%s manage do apply %s on %s", this->Id, newEffect->name, target->Id);
 				target->ApplyEffect(newEffect);
 			}
-
 		}
 	}
 
@@ -164,7 +163,7 @@ std::list<std::shared_ptr<Types::StatusEffect>> Character::GetEffectByAction(Typ
 	return foundedEffects;
 }
 
-void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, std::function<void()> moveToTargetLocationFunc)
+void Character::PlayTurn(std::shared_ptr<Character> target)
 {
 	if (IsDead())
 	{
@@ -178,7 +177,7 @@ void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, s
 		return;
 	}
 
-	if (isNearTarget)
+	if (this->IsCloseToTarget(target))
 	{
 		// TODO decide if should attack or use skill
 		if (CanAttackAndPrintMessageIfCant())
@@ -199,7 +198,7 @@ void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, s
 				if (target->IsDead())
 				{
 					Engine::DrawText("\n *** %s killed %s *** \n", this->Id, target->Id);
-					Engine::DrawText(mCharacterClass.OnKillEnemyMessage, this->Id, target->Id);
+					Engine::DrawText(">%s: %s \n", this->Id, mCharacterClass.OnKillEnemyMessage);
 					return;
 				}
 			}
@@ -209,7 +208,7 @@ void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, s
 	{
 		if (CanMoveAndPrintMessageIfCant())
 		{
-			moveToTargetLocationFunc();
+			this->MoveToTargetLocation(target);
 			Engine::DrawText("%s move to %s direction", this->Id, target->Id);
 		}
 	}
