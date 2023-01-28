@@ -1,4 +1,7 @@
 #pragma once
+
+#include <vector>
+
 class Types
 {
 public:
@@ -80,12 +83,19 @@ public:
         }
     };
 
+    struct CharacterAttackEffectsConfig
+    {
+        StatusEffectTypes type;
+        int probability;
+    };
+
     struct CharacterClass
     {
         CharacterClassType type;
         float Health;
         float BaseDamage;
         float DamageMultiplier;
+        std::vector<CharacterAttackEffectsConfig> characterAttackEffectsConfig;
 
         const char * AttackActMessage;
 

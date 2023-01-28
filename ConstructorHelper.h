@@ -46,6 +46,21 @@ public:
             characterClass.OnCantAttackEffectMessage = "I am stunned and unable to attack, my faith in my deity is the only thing that keeps me going.";
 
             characterClass.AttackActMessage = "%s attacks with holy power against %s!"; 
+
+            characterClass.characterAttackEffectsConfig = {
+                Types::CharacterAttackEffectsConfig{
+                    Types::StatusEffectTypes::Burn,
+                    10,
+                },
+                Types::CharacterAttackEffectsConfig{
+                    Types::StatusEffectTypes::KnockBack,
+                    20,
+                },
+                Types::CharacterAttackEffectsConfig{
+                    Types::StatusEffectTypes::Stun,
+                    25,
+                },
+            };
             break;
         case Types::CharacterClassType::Warrior:
             characterClass.Health = 130;
@@ -60,8 +75,18 @@ public:
             characterClass.OnWinMessage = "Victory is mine, but the battle never ends. I will continue to hone my combat skills and be ready for the next fight.";
             characterClass.OnCantMoveEffectMessage = "I may be down, but I am not out. My determination will see me through this.";
             characterClass.OnCantAttackEffectMessage = "I am stunned and unable to defend myself.";
-
             characterClass.AttackActMessage = "%s charges towards %s!";
+
+            characterClass.characterAttackEffectsConfig = {                
+                Types::CharacterAttackEffectsConfig{
+                    Types::StatusEffectTypes::KnockBack,
+                    25,
+                },
+                Types::CharacterAttackEffectsConfig{
+                    Types::StatusEffectTypes::Bleed,
+                    90,
+                },
+            };
             break;
         case Types::CharacterClassType::Cleric:
             characterClass.Health = 85;
@@ -76,8 +101,18 @@ public:
             characterClass.OnWinMessage = "Victory is mine, but the fight for righteousness continues. I will continue to serve my deity and guide my people towards the path of righteousness.";
             characterClass.OnCantMoveEffectMessage = "My body may be incapacitated, but my spirit remains strong.";
             characterClass.OnCantAttackEffectMessage = "I am stunned and unable to cast spells, I pray for a swift recovery.";
-
             characterClass.AttackActMessage = "%s casts a spell on %s!";
+
+            characterClass.characterAttackEffectsConfig = {
+                Types::CharacterAttackEffectsConfig{
+                    Types::StatusEffectTypes::Stun,
+                    30,
+                },
+                Types::CharacterAttackEffectsConfig{
+                    Types::StatusEffectTypes::Burn,
+                    38,
+                },
+            };
 
             break;
         case Types::CharacterClassType::Archer:
@@ -94,6 +129,17 @@ public:
             characterClass.OnCantMoveEffectMessage = "I may be grounded, but I still have my bow. I will rain arrows upon our enemies from here.";
             characterClass.OnCantAttackEffectMessage = "I am stunned and unable to attack.";
             characterClass.AttackActMessage = "%s shoots an arrow at %s!";
+            
+            characterClass.characterAttackEffectsConfig = {
+                Types::CharacterAttackEffectsConfig{
+                    Types::StatusEffectTypes::KnockBack,
+                    30,
+                },
+                Types::CharacterAttackEffectsConfig{
+                    Types::StatusEffectTypes::Bleed,
+                    38,
+                },
+            };            
             break;
 
         default:

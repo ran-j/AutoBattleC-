@@ -59,18 +59,15 @@ float Character::Attack(std::shared_ptr<Character> target)
 
 	if (!target->IsDead())
 	{
-		// TODO a for list with all negative status that this character can apply and their chance
-		if (Utils::GetRandomBoolWithProbability(Utils::GetRandomInt(80, 90))) // from 10 to 40 to apply bleed
+		for (auto it = mCharacterClass.characterAttackEffectsConfig.begin(); it != mCharacterClass.characterAttackEffectsConfig.end(); ++it)
 		{
-			auto bleedEffect = ConstructorHelper::CreateStatusEffect(Types::Bleed);
-			Engine::DrawText("%s manage do apply %s on %s", this->Id, bleedEffect->name, target->Id);
-			target->ApplyEffect(bleedEffect);
-		}
-		else if (Utils::GetRandomBoolWithProbability(Utils::GetRandomInt(1, 20))) // from 1 to 20 to apply stun
-		{
-			auto newEffect = ConstructorHelper::CreateStatusEffect(Types::KnockBack);
-			Engine::DrawText("%s manage do apply %s on %s", this->Id, newEffect->name, target->Id);
-			target->ApplyEffect(newEffect);
+			if (Utils::GetRandomBoolWithProbability((*it).probability))
+			{
+				auto newEffect = ConstructorHelper::CreateStatusEffect((*it).type);
+				Engine::DrawText("%s manage do apply %s on %s", this->Id, newEffect->name, target->Id);
+				target->ApplyEffect(newEffect);
+			}
+
 		}
 	}
 
