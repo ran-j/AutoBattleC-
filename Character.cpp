@@ -6,9 +6,10 @@
 #include <string>
 
 using namespace std;
-Character::Character(Types::CharacterClassType charcaterClass)
+Character::Character(Types::CharacterClass characterClass)
 {
 	statusEffects = list<std::shared_ptr<Types::StatusEffect>>();
+	mCharacterClass = characterClass;
 }
 
 Character::~Character()
@@ -23,7 +24,9 @@ bool Character::TakeDamage(float amount)
 	{
 		bIsDead = true;
 		Die();
+		return true;
 	}
+	Engine::DrawText(">%s: %s \n", this->Id, mCharacterClass.OnGetDamageMessage);
 	return true;
 }
 
@@ -37,7 +40,9 @@ void Character::Heal(float amount)
 
 void Character::Die()
 {
-	printf("%s : aaaaaaaaa, I got killed \n", Id);
+	statusEffects.clear();
+	bIsDead = true;
+	Engine::DrawText(">%s: %s \n", this->Id, mCharacterClass.OnDyingMessage);
 }
 
 float Character::Attack(std::shared_ptr<Character> target)
@@ -74,6 +79,10 @@ float Character::Attack(std::shared_ptr<Character> target)
 
 void Character::ProcessStatusEffects()
 {
+	if (IsDead())
+	{
+		return;
+	}
 	for (auto it = statusEffects.begin(); it != statusEffects.end(); ++it)
 	{
 		std::shared_ptr<Types::StatusEffect> currentEffect = (*it);
@@ -93,11 +102,16 @@ void Character::ProcessStatusEffects()
 
 bool Character::CanMoveAndPrintMessageIfCant()
 {
+	if (IsDead())
+	{
+		return false;
+	}
 	std::list<std::shared_ptr<Types::StatusEffect>> blockMovementEffectList = GetEffectByAction(Types::StatusEffectAction::AnyMove);
 	if (blockMovementEffectList.size() > 0)
 	{
 		auto first = blockMovementEffectList.begin(); // for this man we can inform only one
 		Engine::DrawText("%s can't move because of effect(s) %s", this->Id, (*first)->name);
+		Engine::DrawText(">%s: %s \n", this->Id, mCharacterClass.OnCantMoveEffectMessage);
 		return false;
 	}
 	return true;
@@ -105,11 +119,16 @@ bool Character::CanMoveAndPrintMessageIfCant()
 
 bool Character::CanAttackAndPrintMessageIfCant()
 {
+	if (IsDead())
+	{
+		return false;
+	}
 	std::list<std::shared_ptr<Types::StatusEffect>> blockMovementEffectList = GetEffectByAction(Types::StatusEffectAction::AnyAttack);
 	if (blockMovementEffectList.size() > 0)
 	{
 		auto first = blockMovementEffectList.begin(); // for this man we can inform only one
 		Engine::DrawText("%s can't attack because of effect(s) %s", this->Id, (*first)->name);
+		Engine::DrawText(">%s: %s \n", this->Id, mCharacterClass.OnCantAttackEffectMessage);
 		return false;
 	}
 	return true;
@@ -158,6 +177,7 @@ void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, s
 
 	if (!CanPlayTurnAndPrintMessageIfCant())
 	{
+		Engine::DrawText(">%s: %s \n", this->Id, mCharacterClass.OnCantAttackEffectMessage);
 		return;
 	}
 
@@ -166,18 +186,23 @@ void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, s
 		// TODO decide if should attack or use skill
 		if (CanAttackAndPrintMessageIfCant())
 		{
-			Engine::DrawText("%s launch a attack in %s", this->Id, target->Id);
+			// Engine::DrawText("%s launch a attack in %s", this->Id, target->Id);
+			Engine::DrawText(">%s: %s \n", this->Id, mCharacterClass.AttackMessage);
+			Engine::DrawText(mCharacterClass.AttackActMessage, this->Id, target->Id);
+
 			float damage = Attack(target);
 			if (damage == 0)
 			{
-				Engine::DrawText("%s attack with rough but miss the attack on %s", this->Id, target->Id);
+				Engine::DrawText("%s miss the attack on %s", this->Id, target->Id);
+				Engine::DrawText(">%s: %s \n", this->Id, mCharacterClass.OnMissAttackMessage);
 			}
 			else
 			{
-				Engine::DrawText("%s inflicted %f damage points in %s with bare hands", this->Id, damage, target->Id); // TODO each class have a different attack
+				Engine::DrawText("%s dealt %f damage points to %s", this->Id, damage, target->Id);
 				if (target->IsDead())
 				{
-					Engine::DrawText("%s: Take that %s", this->Id, target->Id);
+					Engine::DrawText("\n *** %s killed %s *** \n", this->Id, target->Id);
+					Engine::DrawText(mCharacterClass.OnKillEnemyMessage, this->Id, target->Id);
 					return;
 				}
 			}
@@ -189,7 +214,12 @@ void Character::PlayTurn(bool isNearTarget, std::shared_ptr<Character> target, s
 		if (CanMoveAndPrintMessageIfCant())
 		{
 			moveToTargetLocationFunc();
-			Engine::DrawText("%s move to battle against %s", this->Id, target->Id);
+			Engine::DrawText("%s move to %s direction", this->Id, target->Id);
 		}
 	}
+}
+
+void Character::WinGame()
+{
+	Engine::DrawText(">%s: %s \n", this->Id, mCharacterClass.OnWinMessage);
 }

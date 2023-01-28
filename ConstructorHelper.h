@@ -12,13 +12,13 @@ public:
     static inline std::shared_ptr<Character> CreateCharacter(int classIndex, float health, float baseDamage, const char *id, const char *sprite, const char *team)
     {
         Types::CharacterClassType CharacterClassType = (Types::CharacterClassType)classIndex;
-
+        Types::CharacterClass characterClass = ConstructorHelper::GetCharacterClass(CharacterClassType);
         
-        auto newCharacter = std::make_shared<Character>(CharacterClassType);
-        newCharacter->MaxHealth = health;
-        newCharacter->Health = health;
-        newCharacter->BaseDamage = baseDamage;
-        newCharacter->DamageMultiplier = Utils::GetRandomFloat(0.2, 1.0); // TODO class influence in life and damage
+        auto newCharacter = std::make_shared<Character>(characterClass);
+        newCharacter->MaxHealth = characterClass.Health;
+        newCharacter->Health = characterClass.Health;
+        newCharacter->BaseDamage = characterClass.BaseDamage;
+        newCharacter->DamageMultiplier = characterClass.DamageMultiplier;
         newCharacter->Id = id;
         newCharacter->Sprite = sprite;
         newCharacter->Team = team;
@@ -34,7 +34,7 @@ public:
         case Types::CharacterClassType::Paladin:
             characterClass.Health = 110;
             characterClass.BaseDamage = 20;
-            characterClass.DamageMultiplier = 1.5;
+            characterClass.DamageMultiplier = Utils::GetRandomFloat(1.2f, 1.5f);
             characterClass.AttackMessage = "In the name of my deity, I strike at this foe with holy power!";
             characterClass.OnMissAttackMessage = "Missed! I will not be deterred, I will strike again with all my might in the name of righteousness!";
             characterClass.OnMDodgeMessage = "With my training and faith, I have dodged the enemy's strike, I will strike back with righteousness.";
@@ -50,7 +50,7 @@ public:
         case Types::CharacterClassType::Warrior:
             characterClass.Health = 130;
             characterClass.BaseDamage = 30;
-            characterClass.DamageMultiplier = 1.2;
+            characterClass.DamageMultiplier = Utils::GetRandomFloat(1.0f, 1.2f);
             characterClass.AttackMessage = "With all my might, I strike at this enemy!";
             characterClass.OnMissAttackMessage = "I'll not be denied, that was just a scratch, next one will be fatal!";
             characterClass.OnMDodgeMessage = "I've dodged the enemy's strike, now it's my turn to strike back with all my strength.";
@@ -66,7 +66,7 @@ public:
         case Types::CharacterClassType::Cleric:
             characterClass.Health = 85;
             characterClass.BaseDamage = 10;
-            characterClass.DamageMultiplier = 1.8;
+            characterClass.DamageMultiplier = Utils::GetRandomFloat(1.6f, 1.8f);
             characterClass.AttackMessage = "By the power of my deity, I strike at this foe!";
             characterClass.OnMissAttackMessage = "I Missed! I will not falter, I will strike again with the power of my deity on my side.";
             characterClass.OnMDodgeMessage = "With my deity's protection, I have dodged the enemy's strike and I will strike back with the power of my deity.";
@@ -83,7 +83,7 @@ public:
         case Types::CharacterClassType::Archer:
             characterClass.Health = 100;
             characterClass.BaseDamage = 25;
-            characterClass.DamageMultiplier = 2.0;
+            characterClass.DamageMultiplier = Utils::GetRandomFloat(1.9f, 2.0f);
             characterClass.AttackMessage = "I release my arrow, striking at the target with deadly accuracy!";            
             characterClass.OnMissAttackMessage = "I missed, but I'm not done yet, I'll take another shot and make it count.";
             characterClass.OnMDodgeMessage = "With my quick reflexes and training, I've dodged the enemy's strike, now it's my turn to strike back with a well-aimed shot.";

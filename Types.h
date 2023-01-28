@@ -89,6 +89,8 @@ public:
 
         const char * AttackActMessage;
 
+        const char * OnAttackHit;
+
         const char * AttackMessage;
         const char * OnMissAttackMessage;
         const char * OnMDodgeMessage;

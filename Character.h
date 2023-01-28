@@ -10,7 +10,7 @@
 class Character : public Actor
 {
 public:
-    Character(Types::CharacterClassType charcaterClass);
+    Character(Types::CharacterClass characterClass);
     ~Character();
 
     float Health;
@@ -24,6 +24,8 @@ public:
 public:
     //Character die function
     void Die();
+    //Tells that character win the game
+    void WinGame();
     //Take damage from other character and returns if hit or not
     bool TakeDamage(float amount);    
     //Heal character
@@ -75,7 +77,8 @@ public:
 
 private:
     bool bIsDead = false;
-    std::list<std::shared_ptr<Types::StatusEffect> > statusEffects; //turn in shared_pointer
+    std::list<std::shared_ptr<Types::StatusEffect> > statusEffects;
+    Types::CharacterClass mCharacterClass;
 
 protected:
     //Check if character has any effect or condition that prevents him from moving

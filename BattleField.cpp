@@ -129,7 +129,7 @@ void BattleField::StartTurn()
             engine->MoveActorToTarget(currentCharacter, enemyTarget);
         });
 
-        Engine::DrawText(" ");
+        Engine::DrawText(" \t ");
     }
 
     currentTurn++;
@@ -138,7 +138,8 @@ void BattleField::StartTurn()
 
 void BattleField::HandleTurn()
 {
-    Engine::DrawText("\n");
+    Engine::DrawText("\n#### End of turn %d ####", currentTurn);
+
     auto it = PlayersQueue.begin();
     while (it != PlayersQueue.end())
     {
@@ -156,14 +157,14 @@ void BattleField::HandleTurn()
             else
             {
                 engine->DestroyActor(currentCharacter);
-                Engine::DrawText(" %s was killed", currentCharacter->Id);
+                Engine::DrawText("%s was killed", currentCharacter->Id);
                 it = PlayersQueue.erase(it);
             }
         }
         else
         {
             currentCharacter->DecreaseStatusEffects();
-            Engine::DrawText("%s still has %f life points \t", currentCharacter->Id, currentCharacter->Health);
+            Engine::DrawText("%s still has %f life points", currentCharacter->Id, currentCharacter->Health);
             it++;
         }
     }
@@ -172,12 +173,11 @@ void BattleField::HandleTurn()
     {
         engine->ClearCanvas();
         engine->Stop();
+        PlayerCharacter->WinGame();
         Engine::DrawText("\nYou Win, thanks for play.\n");
         Engine::WaitInput();
         return;
     }
-
-    Engine::DrawText("\n#### End of turn %d, click on any key to start the next turn... #### \n", currentTurn);
 
     Engine::WaitInput();
 }
