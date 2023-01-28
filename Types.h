@@ -46,7 +46,7 @@ public:
         //Lose health over 2 turns
         Bleed = 1,
         //Can't do nothing for 3 turns
-        KnockBack = 2,
+        KnockDown = 2,
         //Heal over 2 turns
         Cure = 3,
         //Can't do nothing for one turn
@@ -95,10 +95,10 @@ public:
         float Health;
         float BaseDamage;
         float DamageMultiplier;
+        int probabilityToUseSkill;
         std::vector<CharacterAttackEffectsConfig> characterAttackEffectsConfig;
 
         const char * AttackActMessage;
-
         const char * OnAttackHit;
 
         const char * AttackMessage;
@@ -112,6 +112,26 @@ public:
         const char * OnCantAttackEffectMessage;
         //const char * OnUseSkillMessage; TODO
     };
+
+    enum SpecialAbilityTypes
+    {
+        //Knock the target back one tile
+        KnockBack = 1,
+        //Deals 2x attack damage to a target
+        StrongAttack = 2,
+        //Teleports the character to any tile
+        Teleport = 3,
+        //Makes the character "hidden", stopping enemies from chasing or attacking
+        Invisibility = 4,
+        //Character can damage a target from far away
+        ThrowRock = 5,
+    };
+
+    struct SpecialAbility
+    {
+        SpecialAbilityTypes type;
+    };
+    
 
 };
 
