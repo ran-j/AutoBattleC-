@@ -70,8 +70,6 @@ void Engine::Draw()
 
 void Engine::SpawnActor(std::shared_ptr<Actor> target)
 {
-    // maybe add a unique pointer ref in grids to character
-
     int random = Utils::GetRandomInt(0, GetWorldSize());
     auto l_front = grid->grids.begin();
     advance(l_front, random);
@@ -79,7 +77,7 @@ void Engine::SpawnActor(std::shared_ptr<Actor> target)
     if (!l_front->ocupied)
     {
         l_front->ocupied = true;
-        SetActorIndex(target, random);
+        SetActorIndex(target, l_front->Index);
         bHasChanges = true;
     }
     else
@@ -118,7 +116,7 @@ void Engine::MoveActorToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<Act
 
     int newIndex = GetMoveDirection(actorCurrentGrid->xIndex, actorCurrentGrid->yIndex, targetCurrentGrid->xIndex, targetCurrentGrid->yIndex, actorCurrentGrid->Index);
 
-    if (newIndex >= 0 && newIndex < gridSize)
+    if (newIndex >= 0 && newIndex <= gridSize)
     {
         // leave the current grid
         actorCurrentGrid->ocupied = false;
@@ -143,6 +141,7 @@ int Engine::GetMoveDirection(int xIndex, int yIndex1, int xIndex2, int yIndex2, 
         return gridIndex - 1;
     }
 
+    //TODO there is a bug here
     if (yIndex1 < yIndex2) // Move up
     {
         return gridIndex - mLines;
