@@ -82,6 +82,11 @@ void Game::SetUpGame()
     auto enemy2 = ConstructorHelper::CreateCharacter(Utils::GetRandomInt(1, 4), 90, 20, "NPC1", "E", "CPUE");
     engine->SpawnActor(enemy2);
 
+    auto rock = std::make_shared<Actor>();
+    rock->Sprite = "R";
+    rock->Id = "Rock";
+    engine->SpawnActor(rock);
+
     PlayersQueue.push_back(PlayerCharacter);
     PlayersQueue.push_back(enemy1);
     PlayersQueue.push_back(enemy2);
@@ -134,7 +139,7 @@ void Game::StartTurn()
         {
             continue;
         }
-         
+
         currentCharacter->PlayTurn(enemyTarget);
 
         Engine::DrawText(" \t ");
