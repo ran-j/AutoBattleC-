@@ -57,7 +57,7 @@ void Engine::Draw()
                 }
                 else
                 {
-                    //This should never happen
+                    // This should never happen
                     printf("[?]\t");
                 }
             }
@@ -80,7 +80,7 @@ void Engine::SpawnActor(std::shared_ptr<Actor> target)
     // get a random position in the grid
     std::random_device rd;
     std::mt19937 g(rd());
-    auto possibleGrid = std::next(worldMatrix->grid->grids.begin(), std::uniform_int_distribution<int>(0, worldMatrix->grid->grids.size() - 1)(g));
+    auto possibleGrid = std::next(worldMatrix->grid->grids.begin(), std::uniform_int_distribution<int>(0, static_cast<int>(worldMatrix->grid->grids.size()) - 1)(g));
 
     if (!possibleGrid->occupied)
     {
