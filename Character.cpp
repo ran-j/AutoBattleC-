@@ -2,8 +2,10 @@
 #include "Utils.h"
 #include "ConstructorHelper.h"
 #include "Engine.h"
+#include "SpecialAbility.h"
 
 #include <string>
+#include <random>
 
 using namespace std;
 Character::Character(Types::CharacterClass characterClass)
@@ -166,6 +168,19 @@ std::list<std::shared_ptr<Types::StatusEffect>> Character::GetEffectByAction(Typ
 	return foundedEffects;
 }
 
+std::shared_ptr<SpecialAbility> Character::GetSkillToUseIfCan()
+{
+	bool canUseSkill = Utils::GetRandomBoolWithProbability(mCharacterClass.probabilityToUseSkill);
+	if (canUseSkill && Skills.size() > 0)
+	{
+		std::random_device rd;
+		std::mt19937 g(rd());
+		auto randomSkill = std::next(Skills.begin(), std::uniform_int_distribution<int>(0, static_cast<int>(Skills.size()) - 1)(g));
+		return (*randomSkill);
+	}
+	return nullptr;
+}
+
 void Character::PlayTurn(std::shared_ptr<Character> target)
 {
 	if (IsDead())
@@ -180,12 +195,28 @@ void Character::PlayTurn(std::shared_ptr<Character> target)
 		return;
 	}
 
+	auto mySkill = GetSkillToUseIfCan();
+
+	if (mySkill)
+	{
+		//if use retuns true means that the skill override normal attack and walk like heal or teleport
+		if (mySkill->ShouldUseSkillOnly()) 
+		{
+			mySkill->Use(this, target);
+			return;
+		}
+	}
+
 	if (this->IsCloseToTarget(target))
 	{
-		// TODO decide if should attack or use skill
+		if (mySkill)
+		{
+			mySkill->Use(this, target);
+			return;
+		}
+
 		if (CanAttackAndPrintMessageIfCant())
 		{
-			// Engine::DrawText("%s launch a attack in %s", this->Id, target->Id);
 			Engine::DrawText(">%s: %s \n", this->Id, mCharacterClass.AttackMessage);
 			Engine::DrawText(mCharacterClass.AttackActMessage, this->Id, target->Id);
 

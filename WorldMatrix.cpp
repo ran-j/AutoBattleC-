@@ -35,8 +35,8 @@ void WorldMatrix::MoveActorToTarget(std::shared_ptr<Actor> actor, std::shared_pt
     auto targetCurrentGrid = GetActorGrid(target);
 
     int newIndex = GetMoveDirection(actorCurrentGrid->Line, targetCurrentGrid->Line, actorCurrentGrid->Column, targetCurrentGrid->Column, actorCurrentGrid->Index);
-    
-    //TODO small bug one character can step into another character position
+
+    // TODO small bug one character can step into another character position
     if (newIndex >= 0 && newIndex < gridSize)
     {
         // leave the current grid
@@ -59,18 +59,18 @@ int WorldMatrix::GetMoveDirection(int Line, int Line2, int Column1, int Column2,
         {
             return gridIndex - mLines;
         }
-        if (Line < Line2) //down
+        if (Line < Line2) // down
         {
             return gridIndex + mLines;
         }
     }
 
-    if (Column1 > Column2) //move right
+    if (Column1 > Column2) // move right
     {
         return gridIndex - 1;
     }
 
-    if (Column1 < Column2) //move left
+    if (Column1 < Column2) // move left
     {
         return gridIndex + 1;
     }
@@ -98,4 +98,19 @@ bool WorldMatrix::IsCloseToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<
 
     double dist = Utils::DistanceTo(actorCurrentGrid->Line, actorCurrentGrid->Column, targetCurrentGrid->Line, targetCurrentGrid->Column);
     return dist <= distance;
+}
+
+void WorldMatrix::MoveActorToIndex(std::shared_ptr<Actor> actor, int index)
+{
+    if (!grid->grids[index].occupied)
+    {
+        auto actorCurrentGrid = GetActorGrid(actor);
+        grid->grids[actorCurrentGrid->Index].occupied = false;
+        grid->grids[index].occupied = true;
+        SetActorIndex(actor, index, actorCurrentGrid->Index);
+    }
+    else
+    {
+        MoveActorToIndex(actor, index + 1); //Danger check this later
+    }
 }

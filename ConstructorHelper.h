@@ -3,8 +3,10 @@
 #include "Types.h"
 #include "Character.h"
 #include "Utils.h"
+#include "SpecialAbility.h"
 
 #include <memory>
+#include <list>
 
 class ConstructorHelper
 {
@@ -13,7 +15,8 @@ public:
     {
         Types::CharacterClassType CharacterClassType = (Types::CharacterClassType)classIndex;
         Types::CharacterClass characterClass = ConstructorHelper::GetCharacterClass(CharacterClassType);
-        
+        std::list<std::shared_ptr<SpecialAbility>> Skills = ConstructorHelper::GetCharacterSkills(CharacterClassType);
+
         auto newCharacter = std::make_shared<Character>(characterClass);
         newCharacter->MaxHealth = characterClass.Health;
         newCharacter->Health = characterClass.Health;
@@ -22,6 +25,7 @@ public:
         newCharacter->Id = id;
         newCharacter->Sprite = sprite;
         newCharacter->Team = team;
+        newCharacter->SetSkills(Skills);
         return newCharacter;
     };
 
@@ -45,7 +49,7 @@ public:
             characterClass.OnCantMoveEffectMessage = "I may be immobile, but my faith in my god will guide my allies to victory.";
             characterClass.OnCantAttackEffectMessage = "I am stunned and unable to attack, my faith in my deity is the only thing that keeps me going.";
             characterClass.probabilityToUseSkill = 30;
-            characterClass.AttackActMessage = "%s attacks with holy power against %s!"; 
+            characterClass.AttackActMessage = "%s attacks with holy power against %s!";
             characterClass.probabilityToDodge = 38;
 
             characterClass.characterAttackEffectsConfig = {
@@ -79,7 +83,7 @@ public:
             characterClass.AttackActMessage = "%s charges towards %s!";
             characterClass.probabilityToUseSkill = 35;
             characterClass.probabilityToDodge = 35;
-            characterClass.characterAttackEffectsConfig = {                
+            characterClass.characterAttackEffectsConfig = {
                 Types::CharacterAttackEffectsConfig{
                     Types::StatusEffectTypes::KnockDown,
                     25,
@@ -123,7 +127,7 @@ public:
             characterClass.Health = 100;
             characterClass.BaseDamage = 25;
             characterClass.DamageMultiplier = Utils::GetRandomFloat(1.9f, 2.0f);
-            characterClass.AttackMessage = "I release my arrow, striking at the target with deadly accuracy!";            
+            characterClass.AttackMessage = "I release my arrow, striking at the target with deadly accuracy!";
             characterClass.OnMissAttackMessage = "I missed, but I'm not done yet, I'll take another shot and make it count.";
             characterClass.OnMDodgeMessage = "With my quick reflexes and training, I've dodged the enemy's strike, now it's my turn to strike back with a well-aimed shot.";
             characterClass.OnKillEnemyMessage = "I have struck down the enemy with a well-aimed shot.";
@@ -135,7 +139,7 @@ public:
             characterClass.AttackActMessage = "%s shoots an arrow at %s!";
             characterClass.probabilityToUseSkill = 32;
             characterClass.probabilityToDodge = 45;
-            
+
             characterClass.characterAttackEffectsConfig = {
                 Types::CharacterAttackEffectsConfig{
                     Types::StatusEffectTypes::KnockDown,
@@ -145,7 +149,7 @@ public:
                     Types::StatusEffectTypes::Bleed,
                     38,
                 },
-            };            
+            };
             break;
 
         default:
@@ -155,9 +159,65 @@ public:
         return characterClass;
     }
 
+    static inline std::list<std::shared_ptr<SpecialAbility>> GetCharacterSkills(Types::CharacterClassType characterClassType)
+    {
+        auto characterSkill = std::list<std::shared_ptr<SpecialAbility>>();
+
+        switch (characterClassType)
+        {
+        case Types::CharacterClassType::Paladin:
+            characterSkill.push_back(CreateSkill(Types::SpecialAbilityTypes::KnockBack));
+            break;
+        case Types::CharacterClassType::Warrior:
+            characterSkill.push_back(CreateSkill(Types::SpecialAbilityTypes::StrongAttack));
+            break;
+        case Types::CharacterClassType::Cleric:
+            characterSkill.push_back(CreateSkill(Types::SpecialAbilityTypes::Teleport));
+            characterSkill.push_back(CreateSkill(Types::SpecialAbilityTypes::Invisibility));
+            break;
+        case Types::CharacterClassType::Archer:
+            characterSkill.push_back(CreateSkill(Types::SpecialAbilityTypes::ThrowRock));
+            break;
+        }
+
+        return characterSkill;
+    }
+
+    static inline std::shared_ptr<SpecialAbility> CreateSkill(Types::SpecialAbilityTypes type)
+    {
+        auto skill = std::make_shared<SpecialAbility>();
+        skill->type = type;
+        skill->OnUseSkillMessage = "Take this"; //TODO better ones
+
+        switch (type)
+        {
+        case Types::SpecialAbilityTypes::KnockBack:
+            skill->name = "Knock Back";
+            break;
+        case Types::SpecialAbilityTypes::StrongAttack:
+            skill->name = "Strong Attack";
+            break;
+        case Types::SpecialAbilityTypes::Teleport:
+            skill->bUseSkillOnly = true;
+            skill->OnUseSkillMessage = "How about this";
+            skill->name = "Teleport";
+            break;
+        case Types::SpecialAbilityTypes::Invisibility:
+            skill->bUseSkillOnly = true;
+            skill->name = "Invisibility";
+            skill->OnUseSkillMessage = "HA HA HA";
+            break;
+        case Types::SpecialAbilityTypes::ThrowRock:
+            skill->name = "Throw Rock";
+            break;
+        }
+
+        return skill;
+    }
+
     static inline std::shared_ptr<Types::StatusEffect> CreateStatusEffect(Types::StatusEffectTypes status)
     {
-        auto statusEffect = std::make_shared<Types::StatusEffect>(Types::StatusEffect{ status, 0, 0, Types::StatusEffectAction::DoNothing, "Nothing?" });
+        auto statusEffect = std::make_shared<Types::StatusEffect>(Types::StatusEffect{status, 0, 0, Types::StatusEffectAction::DoNothing, "Nothing?"});
 
         switch (status)
         {

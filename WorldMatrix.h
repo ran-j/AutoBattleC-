@@ -37,6 +37,8 @@ public:
     int GetActorLocation(std::shared_ptr<Actor> target);
     // Move Actor to a target location
     void MoveActorToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<Actor> target);
+    // Move Actor index
+    void MoveActorToIndex(std::shared_ptr<Actor> actor, int index);
 
     // Move Actor to a grid location
     // void MoveActorToTile(std::shared_ptr<Actor> actor, std::vector<Types::GridBox>::iterator target);

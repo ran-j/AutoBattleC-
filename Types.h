@@ -6,7 +6,6 @@ class Types
 {
 public:
 
-    //TODO better names for this Struct
     struct GridBox
     {
         int Line;
@@ -111,7 +110,6 @@ public:
         const char * OnWinMessage;
         const char * OnCantMoveEffectMessage;
         const char * OnCantAttackEffectMessage;
-        //const char * OnUseSkillMessage; TODO
     };
 
     enum SpecialAbilityTypes
@@ -127,12 +125,6 @@ public:
         //Character can damage a target from far away
         ThrowRock = 5,
     };
-
-    struct SpecialAbility
-    {
-        SpecialAbilityTypes type;
-    };
-    
 
 };
 

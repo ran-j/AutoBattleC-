@@ -29,6 +29,11 @@ public: //Movement functions
         return this->worldMatrix->IsCloseToTarget(shared_from_this(), target, distance);
     }
 
+    inline void MoveToIndex(int index)
+    {
+        this->worldMatrix->MoveActorToIndex(shared_from_this(), index);
+    }
+
 private:
     std::shared_ptr<WorldMatrix> worldMatrix;
  
