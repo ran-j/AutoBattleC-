@@ -1,3 +1,4 @@
+//This class represents all special abilities
 #pragma once
 
 #include "Types.h"

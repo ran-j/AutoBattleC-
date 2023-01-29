@@ -1,3 +1,6 @@
+//This class is the only one place that handles move actors in world 
+//This class does not render anything, just move positions
+
 #pragma once
 
 #include "Grid.h"

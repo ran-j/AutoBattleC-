@@ -1,3 +1,5 @@
+//This class know all game logic like how many player will play and send then to render
+
 #pragma once
 
 #include <list>

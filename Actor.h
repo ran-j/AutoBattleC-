@@ -1,3 +1,5 @@
+//This class represents all Object that can be render in game
+
 #pragma once
 
 #include "WorldMatrix.h"

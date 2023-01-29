@@ -1,3 +1,7 @@
+//All logic render are here this is should be the only class that know how to render
+//This class should be a singleton
+//limitation the render queue is sync if you try to run async you will lose data
+
 #pragma once
 
 #include "Types.h"
@@ -7,8 +11,6 @@
 #include <vector>
 #include <iostream>
 #include <stdarg.h>
-
-// limitation the render queue is sync if you try to run async you will lose data
 
 class Actor;
 class Grid;
