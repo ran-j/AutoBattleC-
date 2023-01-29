@@ -102,6 +102,10 @@ bool WorldMatrix::IsCloseToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<
 
 void WorldMatrix::MoveActorToIndex(std::shared_ptr<Actor> actor, int index)
 {
+    if (index > GetWorldSize())
+    {
+        return;
+    }
     if (!grid->grids[index].occupied)
     {
         auto actorCurrentGrid = GetActorGrid(actor);
