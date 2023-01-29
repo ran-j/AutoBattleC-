@@ -140,16 +140,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AutoBattleC++.cpp" />
-    <ClCompile Include="BattleField.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Types.cpp" />
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="WorldMatrix.cpp" />
+    <ClCompile Include="SpecialAbility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BattleField.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Types.h" />
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="Actor.h" />
+    <ClInclude Include="Utils.h" />
+    <ClInclude Include="ConstructorHelper.h" />
+    <ClInclude Include="WorldMatrix.h" />
+    <ClInclude Include="SpecialAbility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

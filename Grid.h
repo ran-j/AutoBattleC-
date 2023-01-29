@@ -7,15 +7,15 @@ class Grid
 
 public:
 
-    Grid(int Lines, int Columns);
+    Grid();
     ~Grid();
 
-    std::vector<Types::GridBox> grids;
+    void Init(int Lines, int Columns);
 
-    int xLenght;
-    int yLength;
-    
-    // prints the matrix that indicates the tiles of the battlefield
-    void drawBattlefield(int Lines, int Columns);
+private:
+    std::vector<Types::GridBox> grids;
+private:
+    friend class Engine;
+    friend class WorldMatrix;
 };
 
