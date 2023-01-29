@@ -70,10 +70,10 @@ void Game::SetUpGame()
         return SetUpGame();
     }
 
-    PlayerCharacter = ConstructorHelper::CreateCharacter(classIndex, 100, 20, "Hero", "P", "HEROES");
+    PlayerCharacter = ConstructorHelper::CreateCharacter(classIndex, 100, 20, "You", "P", "HEROES");
     engine->SpawnActor(PlayerCharacter);
 
-    auto assistant = ConstructorHelper::CreateCharacter(Utils::GetRandomInt(1, 4), 50, 20, "Hero assistant", "A", "HEROES");
+    auto assistant = ConstructorHelper::CreateCharacter(Utils::GetRandomInt(1, 4), 50, 20, "Your assistant", "A", "HEROES");
     engine->SpawnActor(assistant);
 
     auto enemy1 = ConstructorHelper::CreateCharacter(Utils::GetRandomInt(1, 4), 100, 20, "NPC1", "E", "CPUE");
