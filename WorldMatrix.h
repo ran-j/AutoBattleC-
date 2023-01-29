@@ -31,6 +31,8 @@ private:
     void SetActorIndex(std::shared_ptr<Actor> target, int index, int previousIndex);
     // Get direction base on index
     int GetMoveDirection(int Line, int Line2, int Column1, int Column2, int gridIndex);
+    // Get a grid index that is not occupied
+    int GetNextFreeIndex(int index, int currentIndex);
 
 public:
     // Return Actor index in world tiles
