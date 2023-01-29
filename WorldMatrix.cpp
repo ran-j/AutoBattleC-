@@ -34,52 +34,58 @@ void WorldMatrix::MoveActorToTarget(std::shared_ptr<Actor> actor, std::shared_pt
     auto actorCurrentGrid = GetActorGrid(actor);
     auto targetCurrentGrid = GetActorGrid(target);
 
-    int newIndex = GetMoveDirection(actorCurrentGrid->xIndex, actorCurrentGrid->yIndex, targetCurrentGrid->xIndex, targetCurrentGrid->yIndex, actorCurrentGrid->Index);
-
-    if (newIndex >= 0 && newIndex <= gridSize)
+    int newIndex = GetMoveDirection(actorCurrentGrid->Line, targetCurrentGrid->Line, actorCurrentGrid->Column, targetCurrentGrid->Column, actorCurrentGrid->Index);
+       
+    if (newIndex >= 0 && newIndex < gridSize)
     {
         // leave the current grid
-        actorCurrentGrid->ocupied = false;
+        actorCurrentGrid->occupied = false;
         // Update locations maps
-        SetActorIndex(actor, newIndex);
+        SetActorIndex(actor, newIndex, actorCurrentGrid->Index);
         // enter in grid
-        grid->grids[newIndex].ocupied = true;
+        grid->grids[newIndex].occupied = true;
         bHasChanges = true;
         return;
     }
-
 }
 
-int WorldMatrix::GetMoveDirection(int xIndex, int yIndex1, int xIndex2, int yIndex2, int gridIndex)
+int WorldMatrix::GetMoveDirection(int Line, int Line2, int Column1, int Column2, int gridIndex)
 {
-    if (xIndex < xIndex2) // Move right
+
+    if (Column1 == Column2) // they are at the same level, should choose move up or down
     {
-        return gridIndex + 1;
+        if (Line > Line2) // up
+        {
+            return gridIndex - mLines;
+        }
+        if (Line < Line2) //down
+        {
+            return gridIndex + mLines;
+        }
     }
-    else if (xIndex > xIndex2) // Move left
+
+    if (Column1 > Column2) //move right
     {
         return gridIndex - 1;
     }
 
-    //TODO there is a bug here
-    if (yIndex1 < yIndex2) // Move up
+    if (Column1 < Column2) //move left
     {
-        return gridIndex - mLines;
-    }
-    else if (yIndex1 > yIndex2) // move down
-    {
-        return gridIndex + mLines;
+        return gridIndex + 1;
     }
 
     return -1;
 }
 
-void WorldMatrix::SetActorIndex(std::shared_ptr<Actor> target, int index)
-{   
-    //Delete previous position
-    Actors.erase(index);
+void WorldMatrix::SetActorIndex(std::shared_ptr<Actor> target, int index, int previousIndex)
+{
+    // Delete previous position
+    if (previousIndex >= 0)
+    {
+        Actors.erase(previousIndex);
+    }
     ActorsWorldPositions.erase(target->Id);
-    //added new position on track lists
+    // added new position on track lists
     Actors[index] = target;
     ActorsWorldPositions[target->Id] = index;
 }
@@ -89,6 +95,6 @@ bool WorldMatrix::IsCloseToTarget(std::shared_ptr<Actor> actor, std::shared_ptr<
     auto actorCurrentGrid = GetActorGrid(actor);
     auto targetCurrentGrid = GetActorGrid(target);
 
-    double dist = Utils::DistanceTo(actorCurrentGrid->xIndex, actorCurrentGrid->yIndex, targetCurrentGrid->xIndex, targetCurrentGrid->yIndex);
+    double dist = Utils::DistanceTo(actorCurrentGrid->Line, actorCurrentGrid->Column, targetCurrentGrid->Line, targetCurrentGrid->Column);
     return dist <= distance;
 }

@@ -9,16 +9,16 @@ public:
     //TODO better names for this Struct
     struct GridBox
     {
-        int xIndex;
-        int yIndex;
-        bool ocupied;
+        int Line;
+        int Column;
+        bool occupied;
         int Index;
 
         GridBox(int x, int y, bool bOccupied, int index)
         {
-            xIndex = x;
-            yIndex = y;
-            ocupied = bOccupied;
+            Line = x;
+            Column = y;
+            occupied = bOccupied;
             Index = index;
         }
     };

@@ -47,21 +47,24 @@ void Engine::Draw()
             int index = (worldMatrix->mColumns * i + j);
             Types::GridBox *currentGrid = &worldMatrix->grid->grids[index];
 
-            if (currentGrid->ocupied)
+            if (currentGrid->occupied)
             {
                 std::shared_ptr<Actor> target = worldMatrix->Actors[index];
                 if (target)
                 {
                     printf("[%s]\t", target->GetSprite());
+                    // printf("[%s %d %d %d]\t", target->GetSprite(), index, i, j);
                 }
                 else
                 {
+                    //This should never happen
                     printf("[?]\t");
                 }
             }
             else
             {
                 printf("[ ]\t");
+                // printf("[ %d %d %d]\t", index, i, j);
             }
         }
         printf("\n");
@@ -79,10 +82,10 @@ void Engine::SpawnActor(std::shared_ptr<Actor> target)
     std::mt19937 g(rd());
     auto possibleGrid = std::next(worldMatrix->grid->grids.begin(), std::uniform_int_distribution<int>(0, worldMatrix->grid->grids.size() - 1)(g));
 
-    if (!possibleGrid->ocupied)
+    if (!possibleGrid->occupied)
     {
-        possibleGrid->ocupied = true;
-        worldMatrix->SetActorIndex(target, possibleGrid->Index);
+        possibleGrid->occupied = true;
+        worldMatrix->SetActorIndex(target, possibleGrid->Index, -1);
         target->worldMatrix = worldMatrix;
         bHasChanges = true;
     }
@@ -95,7 +98,7 @@ void Engine::SpawnActor(std::shared_ptr<Actor> target)
 void Engine::DestroyActor(std::shared_ptr<Actor> target)
 {
     auto actorCurrentGrid = worldMatrix->GetActorGrid(target);
-    actorCurrentGrid->ocupied = false;
+    actorCurrentGrid->occupied = false;
     worldMatrix->Actors.erase(actorCurrentGrid->Index);
     worldMatrix->ActorsWorldPositions.erase(target->Id);
     bHasChanges = true;
