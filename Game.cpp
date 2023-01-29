@@ -1,4 +1,4 @@
-#include "BattleField.h"
+#include "Game.h"
 
 #include "Types.h"
 #include "Character.h"
@@ -15,13 +15,13 @@
 
 using namespace std;
 
-BattleField::BattleField()
+Game::Game()
 {
     engine = new (Engine);
     PlayersQueue = list<shared_ptr<Character>>();
 }
 
-void BattleField::Init()
+void Game::Init()
 {
     SetUpGame();
 
@@ -38,7 +38,7 @@ void BattleField::Init()
     return;
 }
 
-void BattleField::SetUpGame()
+void Game::SetUpGame()
 {
     currentTurn = 0;
     Engine::DrawText("Inform battlefield Lines:\n");
@@ -82,7 +82,7 @@ void BattleField::SetUpGame()
     PlayersQueue.push_back(assistant);
 }
 
-std::shared_ptr<Character> BattleField::FindCharacterWithDifferentTags(const char *team)
+std::shared_ptr<Character> Game::FindCharacterWithDifferentTags(const char *team)
 {
     auto targetInterator = find_if(PlayersQueue.begin(), PlayersQueue.end(), [&](const shared_ptr<Character> &otherCharacter)
                                    { return otherCharacter->Team != team && otherCharacter->IsDead() == false; });
@@ -95,7 +95,7 @@ std::shared_ptr<Character> BattleField::FindCharacterWithDifferentTags(const cha
     return foundTarget;
 }
 
-std::shared_ptr<Character> BattleField::FindCharacterWithSameTags(const char *team)
+std::shared_ptr<Character> Game::FindCharacterWithSameTags(const char *team)
 {
     auto targetInterator = find_if(PlayersQueue.begin(), PlayersQueue.end(), [&](const shared_ptr<Character> &otherCharacter)
                                    { return otherCharacter->Team == team && otherCharacter->IsDead() == false; });
@@ -108,7 +108,7 @@ std::shared_ptr<Character> BattleField::FindCharacterWithSameTags(const char *te
     return enemyTarget;
 }
 
-void BattleField::StartTurn()
+void Game::StartTurn()
 {
     Engine::DrawText("\nLogs:\n");
     for (auto it = PlayersQueue.begin(); it != PlayersQueue.end(); ++it)
@@ -137,7 +137,7 @@ void BattleField::StartTurn()
     currentTurn++;
 }
 
-void BattleField::HandleTurn()
+void Game::HandleTurn()
 {
     Engine::DrawText("\n#### End of turn %d ####", currentTurn);
 

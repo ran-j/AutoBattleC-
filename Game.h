@@ -10,10 +10,10 @@ using namespace std;
 class Engine;
 class Character;
 
-class BattleField
+class Game
 {
 public:
-	BattleField();
+	Game();
 	void Init();
 
 private:

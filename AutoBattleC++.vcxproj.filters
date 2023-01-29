@@ -21,7 +21,7 @@
     <ClCompile Include="Grid.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="BattleField.cpp">
+    <ClCompile Include="Game.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="Character.cpp">
@@ -47,7 +47,7 @@
     <ClInclude Include="Grid.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="BattleField.h">
+    <ClInclude Include="Game.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="Character.h">
