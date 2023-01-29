@@ -49,6 +49,12 @@ void Game::SetUpGame()
     int bfColumns = 0;
     cin >> bfColumns;
 
+    if (bfLines < 4 || bfColumns < 4)
+    {
+        Engine::DrawText("Invalid battlefield size, try again.\n");
+        return SetUpGame();
+    }
+
     engine->Init(bfLines, bfColumns);
 
     // asks for the player to choose between for possible classes via console.
@@ -61,7 +67,7 @@ void Game::SetUpGame()
     if (classIndex < 1 || classIndex > 4)
     {
         Engine::DrawText("Invalid Class, try again.\n");
-        SetUpGame();
+        return SetUpGame();
     }
 
     PlayerCharacter = ConstructorHelper::CreateCharacter(classIndex, 100, 20, "Hero", "P", "HEROES");
