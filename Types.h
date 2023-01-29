@@ -96,6 +96,7 @@ public:
         float BaseDamage;
         float DamageMultiplier;
         int probabilityToUseSkill;
+        int probabilityToDodge;
         std::vector<CharacterAttackEffectsConfig> characterAttackEffectsConfig;
 
         const char * AttackActMessage;

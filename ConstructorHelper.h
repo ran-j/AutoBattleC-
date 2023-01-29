@@ -46,6 +46,7 @@ public:
             characterClass.OnCantAttackEffectMessage = "I am stunned and unable to attack, my faith in my deity is the only thing that keeps me going.";
             characterClass.probabilityToUseSkill = 30;
             characterClass.AttackActMessage = "%s attacks with holy power against %s!"; 
+            characterClass.probabilityToDodge = 38;
 
             characterClass.characterAttackEffectsConfig = {
                 Types::CharacterAttackEffectsConfig{
@@ -64,7 +65,7 @@ public:
             break;
         case Types::CharacterClassType::Warrior:
             characterClass.Health = 130;
-            characterClass.BaseDamage = 30;
+            characterClass.BaseDamage = 32;
             characterClass.DamageMultiplier = Utils::GetRandomFloat(1.0f, 1.2f);
             characterClass.AttackMessage = "With all my might, I strike at this enemy!";
             characterClass.OnMissAttackMessage = "I'll not be denied, that was just a scratch, next one will be fatal!";
@@ -77,6 +78,7 @@ public:
             characterClass.OnCantAttackEffectMessage = "I am stunned and unable to defend myself.";
             characterClass.AttackActMessage = "%s charges towards %s!";
             characterClass.probabilityToUseSkill = 35;
+            characterClass.probabilityToDodge = 35;
             characterClass.characterAttackEffectsConfig = {                
                 Types::CharacterAttackEffectsConfig{
                     Types::StatusEffectTypes::KnockDown,
@@ -103,6 +105,7 @@ public:
             characterClass.OnCantAttackEffectMessage = "I am stunned and unable to cast spells, I pray for a swift recovery.";
             characterClass.AttackActMessage = "%s casts a spell on %s!";
             characterClass.probabilityToUseSkill = 45;
+            characterClass.probabilityToDodge = 39;
 
             characterClass.characterAttackEffectsConfig = {
                 Types::CharacterAttackEffectsConfig{
@@ -131,6 +134,7 @@ public:
             characterClass.OnCantAttackEffectMessage = "I am stunned and unable to attack.";
             characterClass.AttackActMessage = "%s shoots an arrow at %s!";
             characterClass.probabilityToUseSkill = 32;
+            characterClass.probabilityToDodge = 45;
             
             characterClass.characterAttackEffectsConfig = {
                 Types::CharacterAttackEffectsConfig{

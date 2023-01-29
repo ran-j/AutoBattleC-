@@ -19,10 +19,13 @@ Character::~Character()
 
 bool Character::TakeDamage(float amount)
 {
-	// TODO add miss chance base on attributes
+	if (Utils::GetRandomBoolWithProbability(mCharacterClass.probabilityToDodge))
+	{
+		return false;
+	}
+
 	if ((Health -= amount) <= 0)
 	{
-		bIsDead = true;
 		Die();
 		return true;
 	}
