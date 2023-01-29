@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "Utils.h"
 #include "ConstructorHelper.h"
+#include "Colors.h"
 
 #include <iostream>
 #include <list>
@@ -70,16 +71,16 @@ void Game::SetUpGame()
         return SetUpGame();
     }
 
-    PlayerCharacter = ConstructorHelper::MakeCharacter(classIndex, 100, 20, "You", "P", "HEROES");
+    PlayerCharacter = ConstructorHelper::MakeCharacter(classIndex, 100, 20, "You", GREEN("P"), "HEROES");
     engine->SpawnActor(PlayerCharacter);
 
-    auto assistant = ConstructorHelper::MakeCharacter(Utils::GetRandomInt(1, 4), 50, 20, "Your assistant", "A", "HEROES");
+    auto assistant = ConstructorHelper::MakeCharacter(Utils::GetRandomInt(1, 4), 50, 20, "Your assistant", BLUE("A"), "HEROES");
     engine->SpawnActor(assistant);
 
-    auto enemy1 = ConstructorHelper::MakeCharacter(Utils::GetRandomInt(1, 4), 100, 20, "Enemy 1", "E", "CPUE");
+    auto enemy1 = ConstructorHelper::MakeCharacter(Utils::GetRandomInt(1, 4), 100, 20, "Enemy 1", RED("E"), "CPUE");
     engine->SpawnActor(enemy1);
 
-    auto enemy2 = ConstructorHelper::MakeCharacter(Utils::GetRandomInt(1, 4), 90, 20, "Enemy 2", "E", "CPUE");
+    auto enemy2 = ConstructorHelper::MakeCharacter(Utils::GetRandomInt(1, 4), 90, 20, "Enemy 2", BRIGHTRED("E"), "CPUE");
     engine->SpawnActor(enemy2);
 
     PlayersQueue.push_back(PlayerCharacter);
