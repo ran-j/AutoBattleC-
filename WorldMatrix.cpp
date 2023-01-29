@@ -35,7 +35,8 @@ void WorldMatrix::MoveActorToTarget(std::shared_ptr<Actor> actor, std::shared_pt
     auto targetCurrentGrid = GetActorGrid(target);
 
     int newIndex = GetMoveDirection(actorCurrentGrid->Line, targetCurrentGrid->Line, actorCurrentGrid->Column, targetCurrentGrid->Column, actorCurrentGrid->Index);
-       
+    
+    //TODO small bug one character can step into another character position
     if (newIndex >= 0 && newIndex < gridSize)
     {
         // leave the current grid
