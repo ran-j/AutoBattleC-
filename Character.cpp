@@ -68,7 +68,7 @@ float Character::Attack(std::shared_ptr<Character> target)
 		{
 			if (Utils::GetRandomBoolWithProbability((*it).probability))
 			{
-				auto newEffect = ConstructorHelper::CreateStatusEffect((*it).type);
+				auto newEffect = ConstructorHelper::MakeStatusEffect((*it).type);
 				Engine::DrawText("%s manage do apply %s on %s", this->Id, newEffect->name, target->Id);
 				target->ApplyEffect(newEffect);
 			}

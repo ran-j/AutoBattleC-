@@ -11,11 +11,11 @@
 class ConstructorHelper
 {
 public:
-    static inline std::shared_ptr<Character> CreateCharacter(int classIndex, float health, float baseDamage, const char *id, const char *sprite, const char *team)
+    static inline std::shared_ptr<Character> MakeCharacter(int classIndex, float health, float baseDamage, const char *id, const char *sprite, const char *team)
     {
         Types::CharacterClassType CharacterClassType = (Types::CharacterClassType)classIndex;
-        Types::CharacterClass characterClass = ConstructorHelper::GetCharacterClass(CharacterClassType);
-        std::list<std::shared_ptr<SpecialAbility>> Skills = ConstructorHelper::GetCharacterSkills(CharacterClassType);
+        Types::CharacterClass characterClass = ConstructorHelper::MakeCharacterClass(CharacterClassType);
+        std::list<std::shared_ptr<SpecialAbility>> Skills = ConstructorHelper::MakeCharacterSkills(CharacterClassType);
 
         auto newCharacter = std::make_shared<Character>(characterClass);
         newCharacter->MaxHealth = characterClass.Health;
@@ -29,7 +29,7 @@ public:
         return newCharacter;
     };
 
-    static inline Types::CharacterClass GetCharacterClass(Types::CharacterClassType characterClassType)
+    static inline Types::CharacterClass MakeCharacterClass(Types::CharacterClassType characterClassType)
     {
         auto characterClass = Types::CharacterClass{};
 
@@ -159,31 +159,31 @@ public:
         return characterClass;
     }
 
-    static inline std::list<std::shared_ptr<SpecialAbility>> GetCharacterSkills(Types::CharacterClassType characterClassType)
+    static inline std::list<std::shared_ptr<SpecialAbility>> MakeCharacterSkills(Types::CharacterClassType characterClassType)
     {
         auto characterSkill = std::list<std::shared_ptr<SpecialAbility>>();
 
         switch (characterClassType)
         {
         case Types::CharacterClassType::Paladin:
-            characterSkill.push_back(CreateSkill(Types::SpecialAbilityTypes::KnockBack));
+            characterSkill.push_back(MakeSkills(Types::SpecialAbilityTypes::KnockBack));
             break;
         case Types::CharacterClassType::Warrior:
-            characterSkill.push_back(CreateSkill(Types::SpecialAbilityTypes::StrongAttack));
+            characterSkill.push_back(MakeSkills(Types::SpecialAbilityTypes::StrongAttack));
             break;
         case Types::CharacterClassType::Cleric:
-            characterSkill.push_back(CreateSkill(Types::SpecialAbilityTypes::Teleport));
-            characterSkill.push_back(CreateSkill(Types::SpecialAbilityTypes::Invisibility));
+            characterSkill.push_back(MakeSkills(Types::SpecialAbilityTypes::Teleport));
+            characterSkill.push_back(MakeSkills(Types::SpecialAbilityTypes::Invisibility));
             break;
         case Types::CharacterClassType::Archer:
-            characterSkill.push_back(CreateSkill(Types::SpecialAbilityTypes::ThrowRock));
+            characterSkill.push_back(MakeSkills(Types::SpecialAbilityTypes::ThrowRock));
             break;
         }
 
         return characterSkill;
     }
 
-    static inline std::shared_ptr<SpecialAbility> CreateSkill(Types::SpecialAbilityTypes type)
+    static inline std::shared_ptr<SpecialAbility> MakeSkills(Types::SpecialAbilityTypes type)
     {
         auto skill = std::make_shared<SpecialAbility>();
         skill->type = type;
@@ -215,7 +215,7 @@ public:
         return skill;
     }
 
-    static inline std::shared_ptr<Types::StatusEffect> CreateStatusEffect(Types::StatusEffectTypes status)
+    static inline std::shared_ptr<Types::StatusEffect> MakeStatusEffect(Types::StatusEffectTypes status)
     {
         auto statusEffect = std::make_shared<Types::StatusEffect>(Types::StatusEffect{status, 0, 0, Types::StatusEffectAction::DoNothing, "Nothing?"});
 
