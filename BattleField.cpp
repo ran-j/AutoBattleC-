@@ -25,10 +25,14 @@ void BattleField::Init()
 {
     SetUpGame();
 
+    engine->ClearCanvas();
+
     while (!engine->ShouldQuit())
     {
         engine->Draw();
         StartTurn();
+        engine->Draw();
+        HandleTurn();
     }
 
     return;
@@ -131,7 +135,6 @@ void BattleField::StartTurn()
     }
 
     currentTurn++;
-    HandleTurn();
 }
 
 void BattleField::HandleTurn()
@@ -176,4 +179,5 @@ void BattleField::HandleTurn()
     }
 
     Engine::WaitInput();
+    engine->ClearCanvas();
 }

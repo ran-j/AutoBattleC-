@@ -38,7 +38,7 @@ void Engine::Draw()
         return;
     }
 
-    ClearCanvas();
+    // ClearCanvas();
 
     for (int i = 0; i < worldMatrix->mLines; i++)
     {
