@@ -83,6 +83,11 @@ void Game::SetUpGame()
     auto enemy2 = ConstructorHelper::MakeCharacter(Utils::GetRandomInt(1, 4), 90, 20, "Enemy 2", BRIGHTRED("E"), "CPUE");
     engine->SpawnActor(enemy2);
 
+    auto rock = std::make_shared<Actor>();
+    rock->Sprite = "R";
+    rock->Id = "Rock";
+    engine->SpawnActor(rock);
+
     PlayersQueue.push_back(PlayerCharacter);
     PlayersQueue.push_back(enemy1);
     PlayersQueue.push_back(enemy2);
