@@ -82,7 +82,7 @@ int WorldMatrix::GetNextFreeIndex(int newIndex, int currentIndex)
 
 int WorldMatrix::GetMoveDirection(int Line, int Line2, int Column1, int Column2, int gridIndex)
 {
-
+    //TODO replace this logic with A* or 
     if (Column1 == Column2) // they are at the same level, should choose move up or down
     {
         if (Line > Line2) // up

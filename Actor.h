@@ -42,6 +42,7 @@ private:
 public:
     const char* Id = "XXXX-XXXX";
     const char* Sprite = "A"; 
+    bool bIsHiddenInGame = false;
 
 private:
     friend class Engine;

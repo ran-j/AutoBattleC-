@@ -92,7 +92,10 @@ void Game::SetUpGame()
 std::shared_ptr<Character> Game::FindCharacterWithDifferentTags(const char *team)
 {
     auto targetInterator = find_if(PlayersQueue.begin(), PlayersQueue.end(), [&](const shared_ptr<Character> &otherCharacter)
-                                   { return otherCharacter->Team != team && otherCharacter->IsDead() == false; });
+                                   { return otherCharacter->Team != team &&
+                                            otherCharacter->IsDead() == false &&
+                                            otherCharacter->Id != PlayerCharacter->Id &&
+                                            otherCharacter->bIsHiddenInGame == false; });
 
     shared_ptr<Character> foundTarget;
     if (targetInterator != PlayersQueue.end())
@@ -105,7 +108,9 @@ std::shared_ptr<Character> Game::FindCharacterWithDifferentTags(const char *team
 std::shared_ptr<Character> Game::FindCharacterWithSameTags(const char *team)
 {
     auto targetInterator = find_if(PlayersQueue.begin(), PlayersQueue.end(), [&](const shared_ptr<Character> &otherCharacter)
-                                   { return otherCharacter->Team == team && otherCharacter->IsDead() == false; });
+                                   { return otherCharacter->Team == team &&
+                                            otherCharacter->IsDead() == false &&
+                                            otherCharacter->Id != PlayerCharacter->Id; });
 
     shared_ptr<Character> enemyTarget;
     if (targetInterator != PlayersQueue.end())
@@ -135,7 +140,7 @@ void Game::StartTurn()
         {
             continue;
         }
-         
+
         currentCharacter->PlayTurn(enemyTarget);
 
         Engine::DrawText(" \t ");

@@ -28,7 +28,7 @@ void SpecialAbility::Use(Character *owner, std::shared_ptr<Character> target)
     }
     else if (type == Types::SpecialAbilityTypes::Invisibility)
     {
-        //TODO
+        owner->bIsHiddenInGame = true;
     }
     else if (type == Types::SpecialAbilityTypes::ThrowRock)
     {

@@ -50,15 +50,14 @@ void Engine::Draw()
             if (currentGrid->occupied)
             {
                 std::shared_ptr<Actor> target = worldMatrix->Actors[index];
-                if (target)
+                if (target && !target->bIsHiddenInGame)
                 {
                     printf("[%s]\t", target->GetSprite());
                     // printf("[%s %d %d %d]\t", target->GetSprite(), index, i, j);
                 }
                 else
                 {
-                    // This should never happen
-                    printf("[?]\t");
+                    printf("[.]\t");
                 }
             }
             else

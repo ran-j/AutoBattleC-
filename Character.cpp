@@ -207,6 +207,9 @@ void Character::PlayTurn(std::shared_ptr<Character> target)
 		}
 	}
 
+	//if is hidden show it selfs before plays
+	bIsHiddenInGame = false;
+
 	if (this->IsCloseToTarget(target))
 	{
 		if (mySkill)
