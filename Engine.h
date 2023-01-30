@@ -52,7 +52,7 @@ public:
     // Tells if should continue in game loop
     inline bool ShouldQuit() { return bShouldQuit; }
     // Clear user viewport
-    void ClearCanvas();
+    void ClearViewPort();
     // Tells engine to stop render
     inline void Stop() { bShouldQuit = true; };
     //Get world Matrix to do operation like walk and teleport

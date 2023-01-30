@@ -18,7 +18,7 @@ void Engine::Init(int lines, int Columns)
     bHasChanges = true;
 }
 
-void Engine::ClearCanvas()
+void Engine::ClearViewPort()
 {
 #ifdef __linux__
     system("clear");
@@ -38,7 +38,7 @@ void Engine::Draw()
         return;
     }
 
-    // ClearCanvas();
+    // ClearViewPort();
 
     for (int i = 0; i < worldMatrix->mLines; i++)
     {

@@ -26,7 +26,7 @@ void Game::Init()
 {
     SetUpGame();
 
-    engine->ClearCanvas();
+    engine->ClearViewPort();
 
     while (!engine->ShouldQuit())
     {
@@ -191,5 +191,5 @@ void Game::HandleTurn()
     }
 
     Engine::WaitInput();
-    engine->ClearCanvas();
+    engine->ClearViewPort();
 }
